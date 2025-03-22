@@ -17,31 +17,54 @@ app = Flask(__name__) # creates the Flask app
 ###
 
 def geocode_address(address):
-    url = "https://nominatim.openstreetmap.org/search"
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
-        "q": address,
-        "format": "json",
-        "limit": 1
-    }
-    headers = {
-        "User-Agent": "YourApp/1.0 (you@example.com)"
+        'address': address,
+        'region': 'us',       # Bias results to U.S.
+        'components': 'administrative_area:GA|country:US',  # Prefer Georgia addresses
+        'key': os.getenv("GOOGLE_API_KEY")
     }
 
     try:
-        response = requests.get(url, params=params, headers=headers)
-        response.raise_for_status()
+        response = requests.get(url, params=params)
         data = response.json()
 
-        if not data:
-            print("No results from geocoder.")
+        if data['status'] == 'OK':
+            loc = data['results'][0]['geometry']['location']
+            return loc['lat'], loc['lng']
+        else:
+            print(f"Google Geocoding failed: {data['status']}")
             return None, None
-
-        lat = float(data[0]['lat'])
-        lon = float(data[0]['lon'])
-        return lat, lon
     except Exception as e:
         print(f"Error during geocoding: {e}")
         return None, None
+
+
+    # url = "https://nominatim.openstreetmap.org/search"
+    # params = {
+    #     "q": address,
+    #     "format": "json",
+    #     "limit": 1
+    # }
+    # headers = {
+    #     "User-Agent": "YourApp/1.0 (you@example.com)"
+    # }
+
+    # try:
+    #     response = requests.get(url, params=params, headers=headers)
+    #     response.raise_for_status()
+    #     data = response.json()
+
+    #     if not data:
+    #         print("No results from geocoder.")
+    #         return None, None
+
+    #     lat = float(data[0]['lat'])
+    #     lon = float(data[0]['lon'])
+    #     return lat, lon
+    # except Exception as e:
+    #     print(f"Error during geocoding: {e}")
+    #     return None, None
 
 
 # def geocode_address(address):
@@ -111,37 +134,6 @@ def get_county(lat, lon):
         return result[0], result[1]
     else:
         return "No county found", None
-
-
-
-# def get_county(lat, lon):
-#     conn = connect_db()
-#     cur = conn.cursor()
-
-#     sql = """
-#         SELECT "name", ST_AsGeoJSON(geom)
-#         FROM "Counties2018"
-#         WHERE ST_Contains(
-#             geom,
-#             ST_SetSRID(ST_Point(%s, %s), 4326)
-#         );
-#     """
-
-#     try:
-#         cur.execute(sql, (lon, lat))  # note: lon first!
-#         result = cur.fetchone()
-#     except Exception as e:
-#         print(f"Database error: {e}")
-#         result = None
-#     finally:
-#         cur.close()
-#         conn.close()
-
-#     if result:
-#         return result[0], result[1]  # county name, geojson
-#     else:
-#         return "No county found", None
-
 ###
 # Purpose: Finds the jurisdiction (e.g., county) for a given latitude and longitude.
 # Steps:
