@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/avanorouzinia/Documents/Georgia Tech/Spring 2025/Capstone/ZaapCodes/venv"
+set -gx VIRTUAL_ENV "/Users/avanorouzinia/Documents/Georgia Tech/Spring 2025/Capstone/Zaap-Codes-/ZaapCodes/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
