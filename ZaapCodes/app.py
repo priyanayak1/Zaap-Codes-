@@ -15,15 +15,44 @@ app = Flask(__name__) # creates the Flask app
 # 3. Returns (lat, lon) if successful; otherwise, returns (None, None).
 # @param address: The address to geocode
 ###
+
 def geocode_address(address):
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
-    params = {'address': address, 'key': os.getenv("GOOGLE_API_KEY")}
-    response = requests.get(url, params=params)
-    data = response.json()
-    if data['status'] == 'OK':
-        loc = data['results'][0]['geometry']['location']
-        return loc['lat'], loc['lng']
-    return None, None
+    url = "https://nominatim.openstreetmap.org/search"
+    params = {
+        "q": address,
+        "format": "json",
+        "limit": 1
+    }
+    headers = {
+        "User-Agent": "YourApp/1.0 (you@example.com)"
+    }
+
+    try:
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+
+        if not data:
+            print("No results from geocoder.")
+            return None, None
+
+        lat = float(data[0]['lat'])
+        lon = float(data[0]['lon'])
+        return lat, lon
+    except Exception as e:
+        print(f"Error during geocoding: {e}")
+        return None, None
+
+
+# def geocode_address(address):
+#     url = "https://maps.googleapis.com/maps/api/geocode/json"
+#     params = {'address': address, 'key': os.getenv("GOOGLE_API_KEY")}
+#     response = requests.get(url, params=params)
+#     data = response.json()
+#     if data['status'] == 'OK':
+#         loc = data['results'][0]['geometry']['location']
+#         return loc['lat'], loc['lng']
+#     return None, None
 
 ###
 # Connects to PostgreSQL database using credentials from environment variables
@@ -37,6 +66,81 @@ def connect_db():
         host=os.getenv("DB_HOST"),
         port=os.getenv("DB_PORT")
     )
+
+@app.route('/test-db')
+def test_db():
+    try:
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute('SELECT COUNT(*) FROM "Counties2018";')
+        count = cur.fetchone()[0]
+        cur.close()
+        conn.close()
+        return f"✅ Connected! {count} rows in Counties2018."
+    except Exception as e:
+        return f"❌ Database connection failed: {e}"
+
+
+def get_county(lat, lon):
+    conn = connect_db()
+    cur = conn.cursor()
+
+    sql = (
+        'SELECT "NAME", ST_AsGeoJSON(geom) '
+        'FROM "Counties2018" '
+        'WHERE ST_Intersects('
+        '  geom, '
+        '  ST_SetSRID(ST_Point(%s, %s), 4326)'
+        ');'
+    )
+
+    print(f"🔎 Querying for point (lon, lat): ({lon}, {lat})")
+
+    try:
+        cur.execute(sql, (lon, lat))
+        result = cur.fetchone()
+        print(f"🧠 Query result: {result}")
+    except Exception as e:
+        print(f"❌ Database query failed: {e}")
+        result = None
+    finally:
+        cur.close()
+        conn.close()
+
+    if result:
+        return result[0], result[1]
+    else:
+        return "No county found", None
+
+
+
+# def get_county(lat, lon):
+#     conn = connect_db()
+#     cur = conn.cursor()
+
+#     sql = """
+#         SELECT "name", ST_AsGeoJSON(geom)
+#         FROM "Counties2018"
+#         WHERE ST_Contains(
+#             geom,
+#             ST_SetSRID(ST_Point(%s, %s), 4326)
+#         );
+#     """
+
+#     try:
+#         cur.execute(sql, (lon, lat))  # note: lon first!
+#         result = cur.fetchone()
+#     except Exception as e:
+#         print(f"Database error: {e}")
+#         result = None
+#     finally:
+#         cur.close()
+#         conn.close()
+
+#     if result:
+#         return result[0], result[1]  # county name, geojson
+#     else:
+#         return "No county found", None
 
 ###
 # Purpose: Finds the jurisdiction (e.g., county) for a given latitude and longitude.
@@ -64,7 +168,7 @@ def find_jurisdiction(lat, lon):
     else: 
         # hardcode a default jurisdiction for now
         default_jurisdiction = 'Fulton County'
-        default_geojson = '{"type":"Polygon","coordinates":[[[-84.251468,33.8442],[-84.251468,34.2716],[-84.289385,34.2716],[-84.289385,33.8442],[-84.251468,33.8442]]]}'
+        default_geojson = '{"type":"Polygon","coordinates":[[[32.0179692,-081.4385431]]]}'
         return default_jurisdiction, default_geojson
     return None, None
 
@@ -76,14 +180,17 @@ def find_jurisdiction(lat, lon):
 # 3. Returns a list of code descriptions.
 # 4. Closes the database connection.
 ###
-def get_codes(jurisdiction_name):
-    conn = connect_db()
-    cur = conn.cursor()
-    cur.execute("SELECT code_description FROM construction_codes WHERE jurisdiction_name = %s;", (jurisdiction_name,))
-    codes = [row[0] for row in cur.fetchall()]
-    cur.close()
-    conn.close()
-    return codes
+# def get_codes(jurisdiction_name):
+#     conn = connect_db()
+#     cur = conn.cursor()
+#     cur.execute(
+#         "SELECT code_description FROM construction_codes WHERE jurisdiction_name = %s;",
+#         (jurisdiction_name,)
+#     )
+#     codes = [row[0] for row in cur.fetchall()]
+#     cur.close()
+#     conn.close()
+#     return codes
 
 # Renders the homepage (index.html).
 @app.route('/')
@@ -101,22 +208,24 @@ def index():
 ###
 @app.route('/lookup', methods=['POST'])
 def lookup():
-    address = request.json['address']
+    address = request.json.get('address')
+    if not address:
+        return jsonify({'error': 'Address required'}), 400
+
     lat, lon = geocode_address(address)
-    if lat is None:
-        return jsonify({'error': 'Invalid address'}), 400
+    if lat is None or lon is None:
+        return jsonify({'error': 'Failed to geocode address'}), 400
 
-    jurisdiction, geojson = find_jurisdiction(lat, lon)
-    # if not jurisdiction:
-    #     return jsonify({'error': 'Jurisdiction not found'}), 404
+    jurisdiction, geojson = get_county(lat, lon)
 
-    codes = get_codes(jurisdiction)
+    # Always return a JSON response
     return jsonify({
         'jurisdiction': jurisdiction,
         'geojson': geojson,
-        'codes': codes
-    })
-
+        'lat': lat,
+        'lon': lon
+    }), 200
+    # codes = get_codes(jurisdiction)
 # runs the app 
 if __name__ == '__main__':
     app.run(debug=True)
