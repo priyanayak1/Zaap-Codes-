@@ -3,6 +3,7 @@ import requests
 import psycopg2
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
+# from bs4 import BeautifulSoup
 
 from bs4 import BeautifulSoup
 
@@ -59,7 +60,6 @@ def scrape_county_codes(county_name):
 # 3. Returns (lat, lon) if successful; otherwise, returns (None, None).
 # @param address: The address to geocode
 ###
-
 def geocode_address(address):
     url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
@@ -83,6 +83,91 @@ def geocode_address(address):
         print(f"Error during geocoding: {e}")
         return None, None
 
+def get_county_url(county_name):
+    county_name = county_name + '_county'
+    # Convert the county name to the format used in the URL
+    formatted_name = county_name.lower().replace(" ", "").replace("-", "")
+    
+    # Construct the URL
+    base_url = "https://library.municode.com/ga"
+    county_url = f"{base_url}/{formatted_name}/codes/code_of_ordinances"
+    #  https://library.municode.com/ga/fulton/codes/code_of_ordinances
+
+    return county_url
+# def scrape_county_codes(county_name):
+#     # Construct the URL for the county's page on the Municode website
+#     base_url = "https://library.municode.com/ga"
+#     search_url = f"{base_url}/search?q={county_name.replace(' ', '%20')}"
+    
+#     try:
+#         # Send a GET request to the search URL
+#         response = requests.get(search_url)
+#         response.raise_for_status()  # Raise an error for bad status codes
+        
+#         # Parse the HTML content
+#         soup = BeautifulSoup(response.text, 'html.parser')
+        
+#         # Find the link to the county's specific page (this selector might need adjustment)
+#         county_link = soup.find('a', text=lambda t: t and county_name.lower() in t.lower())
+#         if not county_link:
+#             print(f"County link not found for {county_name}")
+#             return []  # Return an empty list if no link is found
+        
+#         # Follow the link to the county's page
+#         county_page_url = base_url + county_link['href']
+#         county_page_response = requests.get(county_page_url)
+#         county_page_response.raise_for_status()
+        
+#         # Parse the county's page to extract codes (this part will vary based on the page structure)
+#         county_soup = BeautifulSoup(county_page_response.text, 'html.parser')
+#         codes = []
+        
+#         # Example: Find all elements with a specific class that contains the codes
+#         for code_element in county_soup.find_all('div', class_='code'):
+#             codes.append(code_element.text.strip())
+#         if not codes:
+#             print(f"No codes found for {county_name}")
+#         return codes
+#     except Exception as e:
+#         print(f"Error scraping codes for {county_name}: {e}")
+#         return []
+
+    # url = "https://nominatim.openstreetmap.org/search"
+    # params = {
+    #     "q": address,
+    #     "format": "json",
+    #     "limit": 1
+    # }
+    # headers = {
+    #     "User-Agent": "YourApp/1.0 (you@example.com)"
+    # }
+
+    # try:
+    #     response = requests.get(url, params=params, headers=headers)
+    #     response.raise_for_status()
+    #     data = response.json()
+
+    #     if not data:
+    #         print("No results from geocoder.")
+    #         return None, None
+
+    #     lat = float(data[0]['lat'])
+    #     lon = float(data[0]['lon'])
+    #     return lat, lon
+    # except Exception as e:
+    #     print(f"Error during geocoding: {e}")
+    #     return None, None
+
+
+# def geocode_address(address):
+#     url = "https://maps.googleapis.com/maps/api/geocode/json"
+#     params = {'address': address, 'key': os.getenv("GOOGLE_API_KEY")}
+#     response = requests.get(url, params=params)
+#     data = response.json()
+#     if data['status'] == 'OK':
+#         loc = data['results'][0]['geometry']['location']
+#         return loc['lat'], loc['lng']
+#     return None, None
 ###
 # Connects to PostgreSQL database using credentials from environment variables
 # @return: The database connection object
@@ -195,17 +280,21 @@ def lookup():
         return jsonify({'error': 'Failed to geocode address'}), 400
 
     jurisdiction, geojson = get_county(lat, lon)
-    codes = scrape_county_codes(jurisdiction)
+
+    print(jurisdiction)
+    county_url = get_county_url(jurisdiction)
 
     # Always return a JSON response
+    print(county_url)
     return jsonify({
         'jurisdiction': jurisdiction,
         'geojson': geojson,
         'lat': lat,
         'lon': lon,
-        'codes' : codes
+        'county_url': county_url
     }), 200
+    
     # codes = get_codes(jurisdiction)
 # runs the app 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

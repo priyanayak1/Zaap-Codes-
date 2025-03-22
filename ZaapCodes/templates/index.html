@@ -94,6 +94,7 @@
       </div>
     </div>
 
+    <!-- Address lookup form -->
     <form id="lookupForm">
       <input type="text" id="address" placeholder="Enter address in GA" size="50" required>
       <button type="submit">Find Jurisdiction</button>
@@ -102,7 +103,9 @@
     <div id="map"></div>
   </div>
 
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Custom script -->
   <script src="/static/script.js"></script>
   <script>
     // JavaScript to handle sidebar open/close
@@ -114,6 +117,56 @@
       document.getElementById("sidebar").style.width = "0";
       document.querySelector(".content").style.marginLeft = "0";
     }
+
+
+    // Handle form submission and redirection
+    document.getElementById('lookupForm').addEventListener('submit', function (event) {
+      event.preventDefault();  // Prevent the form from submitting the traditional way
+
+      const address = document.getElementById('address').value;
+
+      // Send a POST request to the Flask backend
+      fetch('/lookup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: address }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.county_url) {
+          // Display a message
+          document.getElementById('result').innerText = `Opening ${data.jurisdiction} in a new tab in 3 seconds...`;
+
+          // Wait for 3 seconds before opening the new tab
+          setTimeout(() => {
+            // Create a hidden link element
+            const link = document.createElement('a');
+            link.href = data.county_url;
+            link.target = '_blank';  // Open in a new tab
+            link.style.display = 'none';  // Hide the link
+
+            // Append the link to the body and click it programmatically
+            document.body.appendChild(link);
+            link.click();
+
+            // Remove the link from the DOM after clicking
+            document.body.removeChild(link);
+
+            // Update the message
+            document.getElementById('result').innerText = `Opened ${data.jurisdiction} in a new tab.`;
+          }, 3000);  // 3000 milliseconds = 3 seconds
+        } else {
+          // Show an error message if no URL is found
+          document.getElementById('result').innerText = 'County URL not found.';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'An error occurred. Please try again.';
+      });
+    });
   </script>
 </body>
 </html>
