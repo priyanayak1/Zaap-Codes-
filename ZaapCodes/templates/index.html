@@ -3,26 +3,169 @@
 <head>
   <meta charset="UTF-8">
   <title>ZaapCodes</title>
+  <!-- Add favicon -->
+  <link rel="icon" type="image/png" href="/assets/ZappyConst_image.jpg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
     #map { height: 500px; }
     body { font-family: sans-serif; margin: 20px; }
+    /* Sidebar styles */
+    #sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
+    #sidebar a {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+    }
+    #sidebar a:hover {
+      color: #f1f1f1;
+      background-color: #333;
+    }
+    #sidebar .close-btn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+    #open-btn {
+      font-size: 30px;
+      cursor: pointer;
+      position: fixed;
+      left: 10px;
+      top: 10px;
+      z-index: 1000;
+    }
+    .content {
+      transition: margin-left 0.5s;
+      padding: 20px;
+    }
+    /* Header and slogan styles */
+    .header-container {
+      display: flex;
+      align-items: center;
+    }
+    .header-container img {
+      height: 50px; /* Adjust as needed */
+      margin-right: 10px;
+    }
+    .slogan {
+      font-size: 16px;
+      color: #666;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>ZaapCodes</h1>
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+    <a href="/about-us">About Us</a>
+    <a href="/search">Search</a>
+    <a href="/zappy">Zappy</a>
+    <a href="/projects">Projects</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/contact-us">Contact Us</a>
+  </div>
 
-  <!-- Wrap input and button in a form so we can handle 'submit' -->
-  <form id="lookupForm">
-    <input type="text" id="address" placeholder="Enter address in GA" size="50" required>
-    <button type="submit">Find Jurisdiction</button>
-  </form>
+  <!-- Open sidebar button -->
+  <span id="open-btn" onclick="openSidebar()">&#9776;</span>
 
-  <h2 id="result"></h2>
-  <!-- <ul id="codes"></ul> -->
-  <div id="map"></div>
+  <!-- Main content -->
+  <div class="content">
+    <!-- Header with image and slogan -->
+    <div class="header-container">
+      <img src="/assets/logo.png" alt="ZaapCodes Logo">
+      <div>
+        <h1>ZaapCodes</h1>
+        <p class="slogan">Getting codes in a zap</p>
+      </div>
+    </div>
 
+    <!-- Address lookup form -->
+    <form id="lookupForm">
+      <input type="text" id="address" placeholder="Enter address in GA" size="50" required>
+      <button type="submit">Find Jurisdiction</button>
+    </form>
+    <h2 id="result"></h2>
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Custom script -->
   <script src="/static/script.js"></script>
+  <script>
+    // JavaScript to handle sidebar open/close
+    function openSidebar() {
+      document.getElementById("sidebar").style.width = "250px";
+      document.querySelector(".content").style.marginLeft = "250px";
+    }
+    function closeSidebar() {
+      document.getElementById("sidebar").style.width = "0";
+      document.querySelector(".content").style.marginLeft = "0";
+    }
+
+    // Handle form submission and redirection
+    document.getElementById('lookupForm').addEventListener('submit', function (event) {
+      event.preventDefault();  // Prevent the form from submitting the traditional way
+
+      const address = document.getElementById('address').value;
+
+      // Send a POST request to the Flask backend
+      fetch('/lookup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: address }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.county_url) {
+          // Display a message
+          document.getElementById('result').innerText = `Opening ${data.jurisdiction} in a new tab in 3 seconds...`;
+
+          // Wait for 3 seconds before opening the new tab
+          setTimeout(() => {
+            // Create a hidden link element
+            const link = document.createElement('a');
+            link.href = data.county_url;
+            link.target = '_blank';  // Open in a new tab
+            link.style.display = 'none';  // Hide the link
+
+            // Append the link to the body and click it programmatically
+            document.body.appendChild(link);
+            link.click();
+
+            // Remove the link from the DOM after clicking
+            document.body.removeChild(link);
+
+            // Update the message
+            document.getElementById('result').innerText = `Opened ${data.jurisdiction} in a new tab.`;
+          }, 3000);  // 3000 milliseconds = 3 seconds
+        } else {
+          // Show an error message if no URL is found
+          document.getElementById('result').innerText = 'County URL not found.';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'An error occurred. Please try again.';
+      });
+    });
+  </script>
 </body>
 </html>
