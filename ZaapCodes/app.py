@@ -1,8 +1,10 @@
 import os
 import requests
 import psycopg2
+import openai
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
+
 # from bs4 import BeautifulSoup
 
 from bs4 import BeautifulSoup
@@ -13,7 +15,6 @@ from bs4 import BeautifulSoup
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
-
 
 def scrape_county_codes(county_name):
     # Construct the URL for the county's page on the Municode website
@@ -295,6 +296,34 @@ def lookup():
     }), 200
     
     # codes = get_codes(jurisdiction)
+
+
+# CHAT STUFF   
+
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    print("Received a request at /chat endpoint AHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    data = request.get_json(force=True)
+    user_message = data.get("message")  # Get user message
+
+    if not data or not user_message:
+        return jsonify({"reply": "I didn't understand that."}), 400
+
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # GPT-4 if available
+            messages=[{"role": "system", "content": "You are a helpful AI assistant."},
+                      {"role": "user", "content": user_message}]
+        )
+        ai_reply = response["choices"][0]["message"]["content"]
+        print(ai_reply)
+        return jsonify({"reply": ai_reply})  # Send AI reply back to frontend
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return jsonify({"reply": "Error connecting to AI."}), 500
+
 # runs the app 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5001, host="0.0.0.0")
