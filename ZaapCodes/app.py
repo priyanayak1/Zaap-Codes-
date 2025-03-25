@@ -1,6 +1,6 @@
 import os
 import requests
-import psycopg2
+import psycopg
 import openai
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
@@ -174,7 +174,7 @@ def get_county_url(county_name):
 # @return: The database connection object
 ###
 def connect_db():
-    return psycopg2.connect(
+    return psycopg.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
