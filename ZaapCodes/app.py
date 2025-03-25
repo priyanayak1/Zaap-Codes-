@@ -3,9 +3,10 @@ import requests
 import psycopg2
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
-# from bs4 import BeautifulSoup
-
 from bs4 import BeautifulSoup
+
+# For chat bot
+import openai
 
 # my api key
 # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
@@ -295,6 +296,45 @@ def lookup():
     }), 200
     
     # codes = get_codes(jurisdiction)
+
+###
+# Purpose: chat bot
+# Need to make: 
+# 1. Need to make chat bot appear on the page
+# 2. Needs to send the codebook document in the background first so that it has it as reference
+# 3. Then you can ask it a question (can be anything but would usually be in reference to the codes)
+# 4. Returns a response
+###
+openai.api_key = "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"
+
+
+def chat_with_gpt(chat_log):
+    response = openai.ChatCompletion.create(model='gpt-3.5-turbo',
+                                            messages=chat_log
+                                          )
+    return response.choices[0].message.content.strip()
+
+
+chat_log = []
+# Remembering more posts is more expensive
+n_remembered_post = 2
+
+
+if __name__ == "__main__":
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ['quit', "exit", "bye"]:
+            break
+
+        chat_log.append({'role': 'user', 'content': user_input})
+
+        if len(chat_log) > n_remembered_post:
+            del chat_log[:len(chat_log)-n_remembered_post]
+
+        response = chat_with_gpt(chat_log)
+        print("Chatbot:", response)
+        chat_log.append({'role': "assistant", 'content': response})
+
 # runs the app 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
