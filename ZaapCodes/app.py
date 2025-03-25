@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 
 from bs4 import BeautifulSoup
 
+import chatbot
+
 # my api key
 # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
 
@@ -95,6 +97,7 @@ def get_county_url(county_name):
     #  https://library.municode.com/ga/fulton/codes/code_of_ordinances
 
     return county_url
+
 # def scrape_county_codes(county_name):
 #     # Construct the URL for the county's page on the Municode website
 #     base_url = "https://library.municode.com/ga"
@@ -304,25 +307,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    print("Received a request at /chat endpoint AHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    data = request.get_json(force=True)
-    user_message = data.get("message")  # Get user message
-
-    if not data or not user_message:
-        return jsonify({"reply": "I didn't understand that."}), 400
-
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # GPT-4 if available
-            messages=[{"role": "system", "content": "You are a helpful AI assistant."},
-                      {"role": "user", "content": user_message}]
-        )
-        ai_reply = response["choices"][0]["message"]["content"]
-        print(ai_reply)
-        return jsonify({"reply": ai_reply})  # Send AI reply back to frontend
-    except Exception as e:
-        print(f"Chat error: {e}")
-        return jsonify({"reply": "Error connecting to AI."}), 500
+    return jsonify(chatbot.simple_request(request))
 
 # runs the app 
 if __name__ == '__main__':
