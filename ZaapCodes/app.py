@@ -2,7 +2,7 @@ import os
 import requests
 import psycopg
 import openai
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from dotenv import load_dotenv
 
 # from bs4 import BeautifulSoup
@@ -307,7 +307,16 @@ openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    return jsonify(chatbot.simple_request(request))
+    app.logger.debug("/chat/request :", request.form['chat-input'])
+    response = chatbot.simple_request(request.form['chat-input'])
+    app.logger.debug("ChatBot Response: ", response)
+
+    # TODO: this should probably be a global type
+    chat_items = []
+    chat_items.append(response)
+
+    # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
+    return render_template('index.html', chat_items=chat_items, chatbot_open=True)
 
 # runs the app 
 if __name__ == '__main__':

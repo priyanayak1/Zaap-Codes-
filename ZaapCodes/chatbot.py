@@ -2,11 +2,13 @@ import openai
 
 def simple_request(request):
     print("Received a request at /chat endpoint AHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    data = request.get_json(force=True)
-    user_message = data.get("message")  # Get user message
+    # data = request.get_json(force=True)
+    # user_message = data.get("message")  # Get user message
 
-    if not data or not user_message:
-        return {"reply": "I didn't understand that."}
+    user_message = request
+
+    # if not data or not user_message:
+    #     return {"reply": "I didn't understand that."}
 
     try:
         response = openai.ChatCompletion.create(
