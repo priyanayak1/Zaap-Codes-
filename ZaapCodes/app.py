@@ -1,11 +1,15 @@
 import os
 import requests
-import psycopg2
-from flask import Flask, render_template, request, jsonify
+import psycopg
+import openai
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from dotenv import load_dotenv
+
 # from bs4 import BeautifulSoup
 
 from bs4 import BeautifulSoup
+
+import chatbot
 
 # my api key
 # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
@@ -13,7 +17,6 @@ from bs4 import BeautifulSoup
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
-
 
 def scrape_county_codes(county_name):
     # Construct the URL for the county's page on the Municode website
@@ -94,6 +97,7 @@ def get_county_url(county_name):
     #  https://library.municode.com/ga/fulton/codes/code_of_ordinances
 
     return county_url
+
 # def scrape_county_codes(county_name):
 #     # Construct the URL for the county's page on the Municode website
 #     base_url = "https://library.municode.com/ga"
@@ -173,7 +177,7 @@ def get_county_url(county_name):
 # @return: The database connection object
 ###
 def connect_db():
-    return psycopg2.connect(
+    return psycopg.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
@@ -295,6 +299,25 @@ def lookup():
     }), 200
     
     # codes = get_codes(jurisdiction)
+
+
+# CHAT STUFF   
+
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    app.logger.debug("/chat/request :", request.form['chat-input'])
+    response = chatbot.simple_request(request.form['chat-input'])
+    app.logger.debug("ChatBot Response: ", response)
+
+    # TODO: this should probably be a global type
+    chat_items = []
+    chat_items.append(response)
+
+    # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
+    return render_template('index.html', chat_items=chat_items, chatbot_open=True)
+
 # runs the app 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5001, host="0.0.0.0")

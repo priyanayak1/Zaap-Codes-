@@ -55,3 +55,48 @@ function lookup() {
     });
 }
 
+// CHAT STUFF
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('chat-input').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') sendMessage();
+});
+
+function toggleChat() {
+  let chatBody = document.getElementById('chat-body');
+  chatBody.style.display = chatBody.style.display === 'none' ? 'block' : 'none';
+}
+
+function sendMessage() {
+  let inputField = document.getElementById('chat-input');
+  let message = inputField.value.trim();
+  if (!message) return;
+
+  appendMessage('user', message);
+  inputField.value = '';
+
+  // Send message to backend
+  fetch('/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message })
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ Chatbot Response:", data); // Debugging
+      appendMessage('bot', data.response);
+    })
+    .catch(err => {
+      console.error("❌ Fetch Error:", err);
+      appendMessage('bot', '❌ Error getting response.');
+    });
+}
+
+function appendMessage(sender, text) {
+  let chatMessages = document.getElementById('chat-messages');
+  let messageDiv = document.createElement('div');
+  messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+  messageDiv.innerText = text;
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to latest message
+}
+

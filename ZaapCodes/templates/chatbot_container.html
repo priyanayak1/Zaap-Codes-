@@ -1,0 +1,20 @@
+
+<div id="chat-container">
+    <div id="chat-header" onclick="toggleChat()" >ZAPPY AI BOT (Click to Open)</div>
+    <div id="chat-body" {% if chatbot_open %} style="display:block;" {% endif %}>
+      <div id="chat-messages"></div>
+      <div id="chat-input-container">
+        <form action="/chat" method="POST">
+          <input type="text" name="chat-input" id="chat-input" placeholder="Ask me something...">
+          <button id="send-btn" type="submit">Send</button>
+          <ul>
+            {% for chat_item in chat_items %}
+            <li>
+                {{ chat_item }} 
+            </li>
+            {% endfor %}
+        </ul>
+        </form>
+      </div>
+    </div>
+</div>

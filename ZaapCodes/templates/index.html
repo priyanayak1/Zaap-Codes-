@@ -66,6 +66,72 @@
       color: #666;
       margin-top: 5px;
     }
+    
+  /* Chatbot styles */
+  #chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001; /* Ensure it appears above the map */
+  }
+
+  #chat-header {
+    background: #111;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  #chat-body {
+    height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    display: none;
+  }
+
+  #chat-input-container {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+
+  #chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+  }
+
+  #send-btn {
+    background: #111;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  .user-message {
+    background: #dff0d8;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+
+  .bot-message {
+    background: #f0f0f0;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
   </style>
 </head>
 <body>
@@ -168,5 +234,9 @@
       });
     });
   </script>
+
+<!-- Chatbot Container -->
+{% include 'chatbot_container.html' %}
+
 </body>
 </html>
