@@ -7,7 +7,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let boundaryLayer;
 
 // Attach lookup() to form submit
-document.getElementById('lookupForm').addEventListener('submit', function (e) {
+document.getElementById('code-lookup-form').addEventListener('submit', function (e) {
   e.preventDefault(); // prevent page reload
   lookup();
 });
