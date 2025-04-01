@@ -55,19 +55,29 @@ body {
     padding: 20px;
 }
 
-/* Header and slogan styles */
+/* Header, slogan, and logo */
+h1 {
+    position: relative;
+    color: orange;
+    border: darkorange;
+    font-size:400%;
+    font-family:verdana;
+}
 .header-container {
     display: flex;
     align-items: center;
 }
 .header-container img {
-    height: 50px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    width: auto;
     margin-right: 10px;
 }
 .slogan {
     font-size: 16px;
-    color: #666;
+    color: orange;
     margin-top: 5px;
+    font-family:verdana;
+    text-align:right;
 }
 
 /* Chatbot styles */
