@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
 import chatbot
+from Code import Code
 
 # my api key
 # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
@@ -17,6 +18,29 @@ import chatbot
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
+
+# CODE PAGE DEMO 
+# TODO : move to appropriate file
+codes = [
+    Code(
+        title="Code 1 Title",
+        short_description="Code 1 short description",
+        full_description="Code 1 full description",
+        source_link="link to code 1"
+    ),
+    Code(
+        title="Code 2 Title",
+        short_description="Code 2 short description",
+        full_description="Code 2 full description",
+        source_link="link to code 2"
+    ),
+    Code(
+        title="Code 1 Title",
+        short_description="Code 1 short description",
+        full_description="Code 1 full description",
+        source_link="link to code 3"
+    )
+]
 
 def scrape_county_codes(county_name):
     # Construct the URL for the county's page on the Municode website
@@ -262,7 +286,7 @@ def find_jurisdiction(lat, lon):
 # Renders the homepage (index.html).
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', codes=codes)
 
 ###
 # Purpose: handles address lookup request 
@@ -317,6 +341,20 @@ def chat():
 
     # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
     return render_template('index.html', chat_items=chat_items, chatbot_open=True)
+
+def get_code(id: int) -> Code:
+    return codes[id]
+
+@app.route('/<int:id>/code_page', methods=['GET'])
+def code_page(id):
+    code = get_code(id)
+
+    app.logger.debug("opening code page for : " + code.title)
+
+    return render_template(
+        'code_page.html',
+        code=code
+    )
 
 # runs the app 
 if __name__ == '__main__':
