@@ -18,7 +18,7 @@ source venv/bin/activate
 
 We are using Google Cloud's Gemini's AI API for the chatbot. In order to run it you need to make sure you install the correct library and save API token to an environment variable.
 
-```pip3 install google-genai```
+```pip3 install google-genai```\
 ```export GEMINI_API_KEY=<token goes here!>```
 
 You can set a temporary key or you can save it in your bash/zsh profile.
