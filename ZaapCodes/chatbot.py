@@ -1,4 +1,18 @@
 import openai
+from google import genai
+
+import os
+
+def simple_request_gemini(request):
+    client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=request,
+    )
+
+    return response.text
+
 
 def simple_request(request):
     print("Received a request at /chat endpoint AHHHHHHHHHHHHHHHHHHHHHHHHHH")

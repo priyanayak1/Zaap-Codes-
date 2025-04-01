@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
 import chatbot
+from ChatItem import ChatItem
 
 # my api key
 # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
@@ -303,17 +304,25 @@ def lookup():
 
 # CHAT STUFF   
 
-openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
-
+# openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
+# TODO: scroll down to bottom of chatbox
+# TODO: save chats
+# TODO: add context when on code page
+# TODO: add suggestions
+# TODO: error handling
+chat_items = []
 @app.route('/chat', methods=['POST'])
 def chat():
     app.logger.debug("/chat/request :", request.form['chat-input'])
-    response = chatbot.simple_request(request.form['chat-input'])
+    response = chatbot.simple_request_gemini(request.form['chat-input'])
     app.logger.debug("ChatBot Response: ", response)
 
-    # TODO: this should probably be a global type
-    chat_items = []
-    chat_items.append(response)
+    chat_items.append(
+        ChatItem(text=request.form['chat-input'], item_type='user')
+    )
+    chat_items.append(
+        ChatItem(text=response, item_type='bot')
+    )
 
     # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
     return render_template('index.html', chat_items=chat_items, chatbot_open=True)
