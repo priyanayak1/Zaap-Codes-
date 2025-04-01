@@ -3,12 +3,26 @@ Stylesheet for ZaapCodes
 3/31/2025
 */
 
+
 body { 
     font-family: sans-serif; 
     margin: 20px; 
 }
+
+/* Map styles */
 #map { 
     height: 500px; 
+}
+
+#address {
+    padding: 10px;
+}
+#submitAddress {
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    color: white;
+    background-color: black;
 }
 
 /* Sidebar styles */
@@ -57,36 +71,41 @@ body {
 
 /* Header, slogan, and logo */
 h1 {
-    position: relative;
     color: orange;
-    border: darkorange;
     font-size:400%;
     font-family:verdana;
+    position: flex;
+    margin: 0;
 }
 .header-container {
     display: flex;
     align-items: center;
+    text-align: center;
+    justify-content: flex-start;
 }
 .header-container img {
     height: 100px; /* Adjust as needed */
     width: auto;
-    margin-right: 10px;
+    margin-left: 20px;
+    margin: 0;
+    /* display: flex; */
+    margin-top: -50px; /* Move the image up slightly */
 }
 .slogan {
-    font-size: 16px;
-    color: orange;
-    margin-top: 5px;
+    font-size: 20px;
+    color: rgb(220, 143, 0);
     font-family:verdana;
     text-align:right;
 }
 
 /* Chatbot styles */
 #chat-container {
+    background-color: rgb(220, 143, 0);
     position: fixed;
     bottom: 20px;
     right: 20px;
     width: 300px;
-    background: white;
+    /* background: white; */
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
