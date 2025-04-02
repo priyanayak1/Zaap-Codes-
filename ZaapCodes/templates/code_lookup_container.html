@@ -1,32 +1,18 @@
-<!-- <form action="/lookup" method="POST" id="code-lookup-form" class="row gy-2 gx-3 align-items-center">
+<form id="lookupForm" action="lookup()" method="GET" class="row gy-2 gx-3 align-items-center">
   <div id="code-lookup-form-row1" class="row g-3 code-lookup-form-row">
     <div class="col-sm-7" id="street-address-field">
-        <input type="text" class="form-control" placeholder="Street Address" aria-label="Street Address">
+      <input type="text" id="address" class="form-control" placeholder="Enter address in GA" size="50" required>
     </div>
-    <div class="col-sm" id="city-field">
-      <input type="text" class="form-control" placeholder="City" aria-label="City">
+    <div class="col-sm" id="code-type-selection">
+      <select class="form-select" id="code-type-menu" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">Plumbing</option>
+        <option value="2">Fire</option>
+        <option value="3">Mechanical</option>
+      </select>
     </div>
-    <div class="col-sm" id="state-field">
-      <input type="text" class="form-control" placeholder="State" aria-label="State">
-    </div>
-  </div>
-  <div id="code-lookup-form-row1" class="row g-1 code-lookup-form-row">
-    <div class="col-sm" id="zip-code-field">
-        <input type="text" class="form-control" placeholder="Zip Code" aria-label="Zip Code">
-    </div>
-    <div class="col-sm" id="jurisdiction-field">
-      <input type="text" class="form-control" placeholder="Jurisdiction" aria-label="Jurisdiction">
-    </div>
-    <div class="col-sm" id="county-field">
-      <input type="text" class="form-control" placeholder="County" aria-label="County">
-    </div>
-    <div class="col-auto" id="code-lookup-submit">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="col-sm">
+      <button type="submit" id="submitAddress">Find Jurisdiction</button>
     </div>
   </div>
-</form> -->
-
-<form id="lookupForm">
-  <input type="text" id="address" placeholder="Enter address in GA" size="50" required>
-  <button type="submit" id="submitAddress">Find Jurisdiction</button>
 </form>
