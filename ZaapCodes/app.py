@@ -35,9 +35,9 @@ codes = [
         source_link="link to code 2"
     ),
     Code(
-        title="Code 1 Title",
-        short_description="Code 1 short description",
-        full_description="Code 1 full description",
+        title="Code 3 Title",
+        short_description="Code 3 short description",
+        full_description="Code 3 full description",
         source_link="link to code 3"
     )
 ]
@@ -286,6 +286,7 @@ def find_jurisdiction(lat, lon):
 # Renders the homepage (index.html).
 @app.route('/')
 def index():
+    app.logger.debug('codes: ' + str(codes))
     return render_template('index.html', codes=codes)
 
 ###
