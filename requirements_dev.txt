@@ -1,0 +1,5 @@
+google-genai
+bs4
+dotenv
+flask
+psycopg[binary,pool]

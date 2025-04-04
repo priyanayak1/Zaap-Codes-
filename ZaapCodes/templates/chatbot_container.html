@@ -9,8 +9,8 @@
           <button id="send-btn" type="submit">Send</button>
           <ul>
             {% for chat_item in chat_items %}
-            <li>
-                {{ chat_item }} 
+            <li class="{{ chat_item.item_type }}-message">
+                {{ chat_item.text }} 
             </li>
             {% endfor %}
         </ul>

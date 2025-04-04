@@ -11,9 +11,6 @@
 
 # import chatbot
 
-# # my api key
-# # GOOGLE_API_KEY=AIzaSyB9csfU7JVByjXZTZjRFHlHPuHoQGRTgu0
-
 # load_dotenv() # loads the environment variables
 
 # app = Flask(__name__) # creates the Flask app
@@ -326,6 +323,8 @@ import requests
 import psycopg2
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
+import chatbot
+from ChatItem import ChatItem
 # from bs4 import BeautifulSoup
 
 load_dotenv() # loads the environment variables
@@ -499,6 +498,33 @@ def lookup():
     }), 200
     
     # codes = get_codes(jurisdiction)
+
+
+# CHAT STUFF   
+
+# openai.api_key = os.getenv("OPENAI_API_KEY")  # Store API key in .env
+# TODO: scroll down to bottom of chatbox
+# TODO: save chats
+# TODO: add context when on code page
+# TODO: add suggestions
+# TODO: error handling
+chat_items = []
+@app.route('/chat', methods=['POST'])
+def chat():
+    app.logger.debug("/chat/request :", request.form['chat-input'])
+    response = chatbot.simple_request_gemini(request.form['chat-input'])
+    app.logger.debug("ChatBot Response: ", response)
+
+    chat_items.append(
+        ChatItem(text=request.form['chat-input'], item_type='user')
+    )
+    chat_items.append(
+        ChatItem(text=response, item_type='bot')
+    )
+
+    # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
+    return render_template('index.html', chat_items=chat_items, chatbot_open=True)
+
 # runs the app 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
