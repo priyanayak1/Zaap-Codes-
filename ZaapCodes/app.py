@@ -1,6 +1,6 @@
 import os
 import requests
-import psycopg2 as psycopg
+import psycopg as psycopg
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import chatbot
