@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ code.title }}{% endblock %}
+{% block header %}{{ code.title }}{% endblock %}
+{% block slogan %}{{ code.short_description }}{% endblock %}
+
+{% block content %}
+<div class="code-content">
+    <p>{{ code.full_description }}</p>
+    <link href="code.source_link" />
+</div>
+{% endblock %}
