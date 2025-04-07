@@ -4,6 +4,7 @@ import psycopg as psycopg
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import chatbot
+import auth
 
 from Code import Code
 from ChatItem import ChatItem
@@ -12,6 +13,7 @@ from bs4 import BeautifulSoup
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
+app.register_blueprint(auth.bp)
 
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
