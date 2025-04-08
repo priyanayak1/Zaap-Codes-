@@ -287,4 +287,5 @@ def code_page(id):
 
 # runs the app 
 if __name__ == '__main__':
+    app.secret_key = 'parangaricutirimicuaro'
     app.run(debug=True, port=5001)
