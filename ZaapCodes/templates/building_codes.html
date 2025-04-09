@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Georgia State Building Codes</title>
+  <link rel="stylesheet" href="/static/StylePage.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 20px;
+      background-color: #f7f9fc;
+      color: #333;
+    }
+  
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2C3E50;
+    }
+    
+    h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #2C3E50;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    }
+
+    .indented {
+        text-indent: 30px;
+        margin-bottom: 15px;
+    }
+  
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: gold;
+      color: black;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      border: 2px solid #d4af37;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  
+    .btn:hover {
+      background-color: #e6c200;
+    }
+  
+    .pdf-text {
+      font-size: 16px;
+      line-height: 1.8;
+    }
+  
+    .pdf-text p {
+      margin-bottom: 15px;
+    }
+  
+    .indented {
+      text-indent: 30px;
+    }
+  
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+  
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    min-width: 400px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+  table thead tr {
+    background-color: #3498db;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  table th, table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  table tbody tr {
+    border-bottom: 1px solid #dddddd;
+  }
+
+  table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+  }
+
+  table tbody tr:last-of-type {
+    border-bottom: 2px solid #3498db;
+  }
+
+  table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  </style>
+  
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="button-group">
+          <a href="/" class="btn">← Back to Home</a>
+          <a href="/static/IBC 2025 Amendments.pdf" class="btn" download>⬇️ Download PDF</a>
+        </div>
+      
+        <h1>Georgia State Amendments to the 2018 IBC</h1>
+  
+  <div class="pdf-text">
+    {{ full_text | safe }}
+  </div>
+</div>
+
+</body>
+</html>

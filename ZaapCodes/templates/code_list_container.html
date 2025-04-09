@@ -1,8 +1,36 @@
-<div class="codes_container">
+<!-- <div class="codes_container">
     {% for code in codes %}
         <div class="code-item">
             <p><a href="{{ url_for('code_page', id=codes.index(code)) }}">{{code.title}}</a></p>
             <p>{{code.short_description}}</p>
         </div>
     {% endfor %}
+</div> -->
+
+
+<div class="codes_container">
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='building') }}">Building Code</a></p>
+        <p>View the Georgia State Building Code.</p>
+    </div>
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='residential') }}">Residential Code</a></p>
+        <p>View the Georgia State Residential Code.</p>
+    </div>
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='plumbing') }}">Plumbing Code</a></p>
+        <p>View the Georgia State Plumbing Code.</p>
+    </div>
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='mechanical') }}">Mechanical Code</a></p>
+        <p>View the Georgia State Mechanical Code.</p>
+    </div>
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='fuel_gas') }}">Fuel Gas Code</a></p>
+        <p>View the Georgia State Fuel Gas Code.</p>
+    </div>
+    <div class="code-item">
+        <p><a href="{{ url_for('code_page', code_type='energy_conservation') }}">Energy Conservation Code</a></p>
+        <p>View the Georgia State Energy Conservation Code.</p>
+    </div>
 </div>
