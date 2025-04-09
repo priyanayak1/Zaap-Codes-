@@ -25,68 +25,82 @@ app = Flask(__name__) # creates the Flask app
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
 
-# codes = [
-#     Code(
-#         title="Code 1 Title",
-#         short_description="Code 1 short description",
-#         full_description="Code 1 full description",
-#         source_link="link to code 1"
-#     ),
-#     Code(
-#         title="Code 2 Title",
-#         short_description="Code 2 short description",
-#         full_description="Code 2 full description",
-#         source_link="link to code 2"
-#     ),
-#     Code(
-#         title="Code 3 Title",
-#         short_description="Code 3 short description",
-#         full_description="Code 3 full description",
-#         source_link="link to code 3"
-#     )
-# ]
+codes = [
+    Code(
+        title="Code 1 Title",
+        short_description="Code 1 short description",
+        full_description="Code 1 full description",
+        source_link="link to code 1"
+    ),
+    Code(
+        title="Code 2 Title",
+        short_description="Code 2 short description",
+        full_description="Code 2 full description",
+        source_link="link to code 2"
+    ),
+    Code(
+        title="Code 3 Title",
+        short_description="Code 3 short description",
+        full_description="Code 3 full description",
+        source_link="link to code 3"
+    )
+]
 
-def scrape_chapter_14_details():
-    url = "https://library.municode.com/ga/fulton_county/codes/code_of_ordinances?nodeId=PTIICOORCORE_CH14BUBURE"
+# def scrape_chapter_14_details():
+#     url = "https://library.municode.com/ga/fulton_county/codes/code_of_ordinances?nodeId=PTIICOORCORE_CH14BUBURE"
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(options=options)
+#     options = Options()
+#     # options.add_argument('--headless')
+#     options.add_argument('--disable-gpu')
+#     options.add_argument('--no-sandbox')
+#     options.add_argument('--disable-dev-shm-usage')
 
-    try:
-        driver.get(url)
-        time.sleep(3)
+#     driver = webdriver.Chrome(options=options)
 
-        # Grab the title of the chapter
-        title_elem = driver.find_element(By.CLASS_NAME, "reader-node__header__title")
-        title = title_elem.text.strip()
+#     try:
+#         print("navigating to municode")
+#         driver.get(url)
+#         time.sleep(4)
+        
+#         print("looking for title")
+#         # Grab the title of the chapter
+#         title_elem = driver.find_element(By.CLASS_NAME, "reader-node__header__title")
+#         title = title_elem.text.strip()
+#         print("title found ", title)
+#         print("looking for content...")
+#         # Grab the full description (content of chapter)
+#         content_elem = driver.find_element(By.CLASS_NAME, "reader-node__content")
+#         full_description = content_elem.text.strip()
+#         print("found content ")
+        
+#         # Create a short description (first paragraph or first 200 chars)
+#         # short_description = full_description.split('\n')[0][:200]
+#         short_description = full_description[:300] + "..." if len(full_description) > 300 else full_description
 
-        # Grab the full description (content of chapter)
-        content_elem = driver.find_element(By.CLASS_NAME, "reader-node__content")
-        full_description = content_elem.text.strip()
+#         return Code(
+#             title=title,
+#             short_description=short_description,
+#             full_description=full_description,
+#             source_link=url
+#         )
+#     # except NoSuchElementException as e:
+#     #     print("❌ Element not found:", e)
+#     #     return None
+#     except Exception as e:
+#         print(f"Scraping failed: {e}")
+#         return None
+#     finally:
+#         driver.quit()
 
-        # Create a short description (first paragraph or first 200 chars)
-        short_description = full_description.split('\n')[0][:200]
+# codes = []
+# fulton_code = scrape_chapter_14_details()
+# if fulton_code:
+#     codes.append(fulton_code)
 
-        return Code(
-            title=title,
-            short_description=short_description,
-            full_description=full_description,
-            source_link=url
-        )
+# code = scrape_chapter_14_details()
 
-    except Exception as e:
-        print(f"Scraping failed: {e}")
-        return None
-    finally:
-        driver.quit()
 
-codes = []
-fulton_code = scrape_chapter_14_details()
-if fulton_code:
-    codes.append(fulton_code)
-    
+
 def scrape_county_codes(county_name):
     # Construct the URL for the county's page on the Municode website
     base_url = "https://library.municode.com/ga"
@@ -260,6 +274,15 @@ def index():
     app.logger.debug('codes: ' + str(codes))
     return render_template('index.html', codes=codes)
 
+# new page for about us 
+@app.route('/about-us')
+def about_us():
+    return render_template('about_us.html')
+
+# new page for projects  
+@app.route('/projects')
+def projects():
+    return render_template('projects.html')
 ###
 # Purpose: handles address lookup request 
 # steps: 
