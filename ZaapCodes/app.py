@@ -10,6 +10,12 @@ from ChatItem import ChatItem
 from county_codes import county_code_info;
 # from bs4 import BeautifulSoup
 
+# selenium imports 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+import time
+import csv
 
 
 load_dotenv() # loads the environment variables
@@ -18,27 +24,69 @@ app = Flask(__name__) # creates the Flask app
 
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
-codes = [
-    Code(
-        title="Code 1 Title",
-        short_description="Code 1 short description",
-        full_description="Code 1 full description",
-        source_link="link to code 1"
-    ),
-    Code(
-        title="Code 2 Title",
-        short_description="Code 2 short description",
-        full_description="Code 2 full description",
-        source_link="link to code 2"
-    ),
-    Code(
-        title="Code 3 Title",
-        short_description="Code 3 short description",
-        full_description="Code 3 full description",
-        source_link="link to code 3"
-    )
-]
 
+# codes = [
+#     Code(
+#         title="Code 1 Title",
+#         short_description="Code 1 short description",
+#         full_description="Code 1 full description",
+#         source_link="link to code 1"
+#     ),
+#     Code(
+#         title="Code 2 Title",
+#         short_description="Code 2 short description",
+#         full_description="Code 2 full description",
+#         source_link="link to code 2"
+#     ),
+#     Code(
+#         title="Code 3 Title",
+#         short_description="Code 3 short description",
+#         full_description="Code 3 full description",
+#         source_link="link to code 3"
+#     )
+# ]
+
+def scrape_chapter_14_details():
+    url = "https://library.municode.com/ga/fulton_county/codes/code_of_ordinances?nodeId=PTIICOORCORE_CH14BUBURE"
+
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    driver = webdriver.Chrome(options=options)
+
+    try:
+        driver.get(url)
+        time.sleep(3)
+
+        # Grab the title of the chapter
+        title_elem = driver.find_element(By.CLASS_NAME, "reader-node__header__title")
+        title = title_elem.text.strip()
+
+        # Grab the full description (content of chapter)
+        content_elem = driver.find_element(By.CLASS_NAME, "reader-node__content")
+        full_description = content_elem.text.strip()
+
+        # Create a short description (first paragraph or first 200 chars)
+        short_description = full_description.split('\n')[0][:200]
+
+        return Code(
+            title=title,
+            short_description=short_description,
+            full_description=full_description,
+            source_link=url
+        )
+
+    except Exception as e:
+        print(f"Scraping failed: {e}")
+        return None
+    finally:
+        driver.quit()
+
+codes = []
+fulton_code = scrape_chapter_14_details()
+if fulton_code:
+    codes.append(fulton_code)
+    
 def scrape_county_codes(county_name):
     # Construct the URL for the county's page on the Municode website
     base_url = "https://library.municode.com/ga"
@@ -227,14 +275,25 @@ def lookup():
     code_type = request.json.get('codeType')
     if not address or not code_type:
         return jsonify({'error': 'Address required'}), 400
-
+    
     lat, lon = geocode_address(address)
     if lat is None or lon is None:
         return jsonify({'error': 'Failed to geocode address'}), 400
-
-    jurisdiction, geojson = get_county(lat, lon)
-    print(jurisdiction)
+    ####
+    # commented out the stuff below to hard code it to fulton 
+    ###
+    # jurisdiction, geojson = get_county(lat, lon)
+    # print(jurisdiction)
+    # county_url = get_county_url(jurisdiction)
+    ####
+    # commented out the stuff above to hard code it to fulton 
+    # below is the hardcode 
+    ###
+    jurisdiction = "Fulton County"
+    geojson = '{"type":"Polygon","coordinates":[[[-84.39, 33.75]]]}'
     county_url = get_county_url(jurisdiction)
+     
+
     # Always return a JSON response
     print(county_url)
     # hard coded for now but we will build database or table for this info
