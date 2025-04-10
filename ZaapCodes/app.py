@@ -227,7 +227,7 @@ code_type_to_pdf = {
     "residential": "irc_2024_amendments.pdf",
     "plumbing": "ipc_2024_amendments.pdf",
     "mechanical": "imc_2024_amendments.pdf",
-    "fuel_gas": "ifgc_2024_amendments.pdf",
+    "fuel_gas": "ifgc_2022_amendments.pdf",
     "energy_conservation": "iecc_2024_amendments.pdf"
 }
 
@@ -237,11 +237,11 @@ def code_page(code_type):
 
     if not pdf_filename:
         return "Invalid code type.", 404
-
+    county_name = request.args.get('county', 'Georgia') # default Georgia if a real county name has not been passed in
     pdf_path = f"pdfs/{pdf_filename}"
     full_text = extract_full_pdf_text(pdf_path)
 
-    return render_template('building_codes.html', full_text=full_text, code_type=code_type) 
+    return render_template('building_codes.html', full_text=full_text, code_type=code_type, county_name = county_name, code_type_to_pdf=code_type_to_pdf) 
 
 # def get_code(id: int) -> Code:
 #     return codes[id]

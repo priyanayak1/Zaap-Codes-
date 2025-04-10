@@ -43,12 +43,12 @@
       <select id="codeType" required>
         <option value="" disabled selected>Select Code Type</option>
         <option value="building">Building Code</option>
-        <option value="fire">Fire Code</option>
+        <option value="residential">Residential Code</option>
         <option value="plumbing">Plumbing Code</option>
         <option value="mechanical">Mechanical Code</option>
         <option value="fuel_gas">Fuel Gas Code</option>
         <option value="energy_conservation">Energy Conservation Code</option>
-        <option value="fire">Fire Code</option>
+       
       </select>
       <button type="submit" id="submitAddress">Find Jurisdiction</button>
     </form>
@@ -110,7 +110,7 @@
             View Full County Codes (Municode)
           </a>
       ${data.code_type  ? `
-       <a href="/codes/${data.code_type}" style="
+       <a href="/codes/${data.code_type}?county=${encodeURIComponent(data.jurisdiction)}" style="
       display: inline-block; 
       margin-top: 10px; 
       padding: 10px 20px; 
@@ -143,7 +143,6 @@
   </script>
 
 <!-- Code list Contains -->
-{% include 'code_list_container.html' %}
 
 <!-- Chatbot Container -->
 {% include 'chatbot_container.html' %}

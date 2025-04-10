@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Georgia State Building Codes</title>
+  <title>{{ county_name }} State {{ code_type.replace('_', ' ').title() }} Codes</title>
   <link rel="stylesheet" href="/static/StylePage.css">
 
   <style>
@@ -136,10 +136,11 @@
 
         <div class="button-group">
           <a href="/" class="btn">← Back to Home</a>
-          <a href="/static/IBC 2025 Amendments.pdf" class="btn" download>⬇️ Download PDF</a>
+          <a href="/static/{{ code_type_to_pdf[code_type] }}" class="btn" download>⬇️ Download PDF</a>
         </div>
       
-        <h1>Georgia State Amendments to the 2018 IBC</h1>
+        <h1>{{ county_name }} State {{ code_type.replace('_', ' ').title() }} Amendments</h1>
+
   
   <div class="pdf-text">
     {{ full_text | safe }}
