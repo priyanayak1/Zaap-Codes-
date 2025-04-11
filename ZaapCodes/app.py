@@ -283,6 +283,11 @@ def about_us():
 @app.route('/projects')
 def projects():
     return render_template('projects.html')
+
+@app.route('/contact-us')
+def contact_us():
+    return render_template('contact_us.html')
+
 ###
 # Purpose: handles address lookup request 
 # steps: 
