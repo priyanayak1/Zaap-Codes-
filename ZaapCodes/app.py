@@ -10,12 +10,12 @@ from ChatItem import ChatItem
 from county_codes import county_code_info;
 # from bs4 import BeautifulSoup
 
-# selenium imports 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import time
-import csv
+# # selenium imports 
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# import time
+# import csv
 
 
 load_dotenv() # loads the environment variables
@@ -310,16 +310,16 @@ def lookup():
     ####
     # commented out the stuff below to hard code it to fulton 
     ###
-    # jurisdiction, geojson = get_county(lat, lon)
-    # print(jurisdiction)
-    # county_url = get_county_url(jurisdiction)
+    jurisdiction, geojson = get_county(lat, lon)
+    print(jurisdiction)
+    county_url = get_county_url(jurisdiction)
     ####
     # commented out the stuff above to hard code it to fulton 
     # below is the hardcode 
     ###
-    jurisdiction = "Fulton County"
-    geojson = '{"type":"Polygon","coordinates":[[[-84.39, 33.75]]]}'
-    county_url = get_county_url(jurisdiction)
+    # jurisdiction = "Fulton County"
+    # geojson = '{"type":"Polygon","coordinates":[[[-84.39, 33.75]]]}'
+    # county_url = get_county_url(jurisdiction)
      
 
     # Always return a JSON response
