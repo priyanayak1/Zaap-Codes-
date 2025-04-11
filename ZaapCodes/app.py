@@ -286,6 +286,10 @@ def code_page(id):
         code=code
     )
 
+@app.route('/projects', methods=['GET'])
+def projects():
+    return render_template('projects.html')
+
 # runs the app 
 if __name__ == '__main__':
     app.secret_key = 'parangaricutirimicuaro'
