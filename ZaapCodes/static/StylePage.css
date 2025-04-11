@@ -106,7 +106,7 @@ h1 {
     text-align:right;
 }
 
-/* Other pages styles */
+/* Login and register pages styles */
 h2 {
     color: rgb(220, 143, 0);
     font-size: 30px;
@@ -136,11 +136,18 @@ h2 {
     padding: 5px;
     margin: 8px 2px;
 }
-#loginPhoto {
+#registerPhoto {
     margin-right: 200px;
     margin-top: -70px;
     margin-left: 20px;
     max-width: 453px;
+    max-height: auto;
+}
+#loginPhoto {
+    margin-right: 200px;
+    margin-top: -70px;
+    margin-left: 20px;
+    max-width: 500px;
     max-height: auto;
 }
 
