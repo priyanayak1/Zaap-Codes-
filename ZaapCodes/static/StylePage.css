@@ -4,7 +4,7 @@ Stylesheet for ZaapCodes
 */
 
 body { 
-    font-family: sans-serif; 
+    font-family: Verdana; 
     margin: 20px; 
 }
 
@@ -104,6 +104,44 @@ h1 {
     color: rgb(220, 143, 0);
     font-family:verdana;
     text-align:right;
+}
+
+/* Other pages styles */
+h2 {
+    color: rgb(220, 143, 0);
+    font-size: 30px;
+    font-family:verdana;
+    text-align:left;
+}
+.login_register_container {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-between;
+}
+.login_register_words {
+    font-family:verdana;
+}
+.login_register_btn {
+    font-size: 16px;
+    margin: 8px 2px;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+    color: white;
+    background-color: black;
+}
+.login_register_search {
+    border-radius: 4px;
+    font-family:verdana;
+    padding: 5px;
+    margin: 8px 2px;
+}
+#loginPhoto {
+    margin-right: 200px;
+    margin-top: -70px;
+    margin-left: 20px;
+    max-width: 453px;
+    max-height: auto;
 }
 
 /* Chatbot styles */
