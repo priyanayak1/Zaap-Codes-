@@ -48,10 +48,27 @@
     <!-- Address lookup form -->
     <form id="lookupForm">
       <input type="text" id="address" placeholder="Enter address in GA" size="50" required>
+      <select id="codeType" required>
+        <option value="" disabled selected>Select Code Type</option>
+        <option value="building">Building Code</option>
+        <option value="fire">Fire Code</option>
+        <option value="plumbing">Plumbing Code</option>
+      </select>
       <button type="submit" id="submitAddress">Find Jurisdiction</button>
     </form>
-    <h2 id="result"></h2>
-    <div id="map"></div>
+    <div class="main-content">
+  
+      <!-- Map on the left -->
+      <div id="map"></div>
+    
+      <!-- Info panel on the right -->
+      <div id="info-panel">
+        <h2 id="result-title"></h2>
+        <div id="result"></div>
+      </div>
+    
+    </div>
+    
   </div>
 
   <!-- Leaflet JS -->
@@ -75,42 +92,34 @@
       event.preventDefault();  // Prevent the form from submitting the traditional way
 
       const address = document.getElementById('address').value;
+      const codeType = document.getElementById('codeType').value;
 
       // Send a POST request to the Flask backend
+
       fetch('/lookup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ address: address }),
+        body: JSON.stringify({ address: address, codeType: codeType }),
       })
       .then(response => response.json())
       .then(data => {
-        if (data.county_url) {
-          // Display a message
-          document.getElementById('result').innerText = `Opening ${data.jurisdiction} in a new tab in 3 seconds...`;
-
-          // Wait for 3 seconds before opening the new tab
-          setTimeout(() => {
-            // Create a hidden link element
-            const link = document.createElement('a');
-            link.href = data.county_url;
-            link.target = '_blank';  // Open in a new tab
-            link.style.display = 'none';  // Hide the link
-
-            // Append the link to the body and click it programmatically
-            document.body.appendChild(link);
-            link.click();
-
-            // Remove the link from the DOM after clicking
-            document.body.removeChild(link);
-
-            // Update the message
-            document.getElementById('result').innerText = `Opened ${data.jurisdiction} in a new tab.`;
-          }, 3000);  // 3000 milliseconds = 3 seconds
+        if (data.code_info) {
+    // Display the code info on the page
+          document.getElementById('result').innerHTML = `
+          <h3>${data.jurisdiction} - ${data.code_type.charAt(0).toUpperCase() + data.code_type.slice(1)} Code</h3>
+          <p>${data.code_info}</p>
+          <a href="${data.county_url}" target="_blank">View Full County Codes</a>
+        `;
+        if (boundaryLayer) {
+          map.removeLayer(boundaryLayer); // remove old layer if exists
+        }
+        const geojson = JSON.parse(data.geojson);
+        boundaryLayer = L.geoJSON(geojson).addTo(map);
+        map.fitBounds(boundaryLayer.getBounds());
         } else {
-          // Show an error message if no URL is found
-          document.getElementById('result').innerText = 'County URL not found.';
+    document.getElementById('result').innerText = 'County information not found.';
         }
       })
       .catch(error => {

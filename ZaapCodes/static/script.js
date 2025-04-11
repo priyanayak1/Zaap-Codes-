@@ -7,10 +7,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let boundaryLayer;
 
 // Attach lookup() to form submit
-document.getElementById('lookupForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // prevent page reload
-  lookup();
-});
+// document.getElementById('lookupForm').addEventListener('submit', function (e) {
+//   e.preventDefault(); // prevent page reload
+//   lookup();
+// });
 
 function lookup() {
   const address = document.getElementById('address').value;
@@ -24,29 +24,18 @@ function lookup() {
     .then(data => {
       console.log("📦 Response data:", data);
     
-      if (!data || data.jurisdiction === "No county found" || !data.geojson) {
-        alert("❌ Could not find jurisdiction.");
-        return;
-      }
-    
-      if (boundaryLayer) map.removeLayer(boundaryLayer);
-    
-      document.getElementById('result').innerText = `Jurisdiction: ${data.jurisdiction}`;
-    
-      // const codeList = document.getElementById('codes');
-      // codeList.innerHTML = '';
-      
-      // if (data.codes && Array.isArray(data.codes)) {
-      //   data.codes.forEach(code => {
-      //     const li = document.createElement('li');
-      //     li.innerText = code;
-      //     codeList.appendChild(li);
-      //   });
+      // if (!data || data.jurisdiction === "No county found" || !data.geojson) {
+      //   alert("❌ Could not find jurisdiction.");
+      //   return;
       // }
     
-      const geojson = JSON.parse(data.geojson);
-      boundaryLayer = L.geoJSON(geojson).addTo(map);
-      map.fitBounds(boundaryLayer.getBounds());
+      // if (boundaryLayer) map.removeLayer(boundaryLayer);
+
+    
+      // document.getElementById('result').innerText = `Jurisdiction: ${data.jurisdiction}`;
+      // const geojson = JSON.parse(data.geojson);
+      // boundaryLayer = L.geoJSON(geojson).addTo(map);
+      // map.fitBounds(boundaryLayer.getBounds());
     })
     .catch(err => {
       console.error("❌ Error in fetch:", err);

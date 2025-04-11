@@ -8,7 +8,10 @@ import auth
 
 from Code import Code
 from ChatItem import ChatItem
-from bs4 import BeautifulSoup
+from county_codes import county_code_info;
+# from bs4 import BeautifulSoup
+
+
 
 load_dotenv() # loads the environment variables
 
@@ -225,7 +228,8 @@ def index():
 @app.route('/lookup', methods=['POST'])
 def lookup():
     address = request.json.get('address')
-    if not address:
+    code_type = request.json.get('codeType')
+    if not address or not code_type:
         return jsonify({'error': 'Address required'}), 400
 
     lat, lon = geocode_address(address)
@@ -237,15 +241,20 @@ def lookup():
     county_url = get_county_url(jurisdiction)
     # Always return a JSON response
     print(county_url)
+    # hard coded for now but we will build database or table for this info
+    county_name = jurisdiction.split()[0]  # Simple way to normalize "Fulton County" to "Fulton"
+    code_info = county_code_info.get(county_name, {}).get(code_type, "Code information not available for this selection.")
+
     return jsonify({
         'jurisdiction': jurisdiction,
         'geojson': geojson,
         'lat': lat,
         'lon': lon,
-        'county_url': county_url
+        'county_url': county_url,
+        'code_type': code_type,
+        'code_info': code_info
     }), 200
     
-    # codes = get_codes(jurisdiction)
 
 
 # CHAT STUFF   
