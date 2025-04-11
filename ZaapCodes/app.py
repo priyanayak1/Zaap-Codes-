@@ -11,6 +11,12 @@ from scraper import extract_full_pdf_text;
 
 # from bs4 import BeautifulSoup
 
+# # selenium imports 
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.by import By
+# import time
+# import csv
 
 
 load_dotenv() # loads the environment variables
@@ -19,6 +25,7 @@ app = Flask(__name__) # creates the Flask app
 
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
+
 codes = [
     Code(
         title="Code 1 Title",
@@ -39,6 +46,99 @@ codes = [
         source_link="link to code 3"
     )
 ]
+# def scrape_chapter_14_details():
+#     url = "https://library.municode.com/ga/fulton_county/codes/code_of_ordinances?nodeId=PTIICOORCORE_CH14BUBURE"
+
+#     options = Options()
+#     # options.add_argument('--headless')
+#     options.add_argument('--disable-gpu')
+#     options.add_argument('--no-sandbox')
+#     options.add_argument('--disable-dev-shm-usage')
+
+#     driver = webdriver.Chrome(options=options)
+
+#     try:
+#         print("navigating to municode")
+#         driver.get(url)
+#         time.sleep(4)
+        
+#         print("looking for title")
+#         # Grab the title of the chapter
+#         title_elem = driver.find_element(By.CLASS_NAME, "reader-node__header__title")
+#         title = title_elem.text.strip()
+#         print("title found ", title)
+#         print("looking for content...")
+#         # Grab the full description (content of chapter)
+#         content_elem = driver.find_element(By.CLASS_NAME, "reader-node__content")
+#         full_description = content_elem.text.strip()
+#         print("found content ")
+        
+#         # Create a short description (first paragraph or first 200 chars)
+#         # short_description = full_description.split('\n')[0][:200]
+#         short_description = full_description[:300] + "..." if len(full_description) > 300 else full_description
+
+#         return Code(
+#             title=title,
+#             short_description=short_description,
+#             full_description=full_description,
+#             source_link=url
+#         )
+#     # except NoSuchElementException as e:
+#     #     print("❌ Element not found:", e)
+#     #     return None
+#     except Exception as e:
+#         print(f"Scraping failed: {e}")
+#         return None
+#     finally:
+#         driver.quit()
+
+# codes = []
+# fulton_code = scrape_chapter_14_details()
+# if fulton_code:
+#     codes.append(fulton_code)
+
+# code = scrape_chapter_14_details()
+
+
+
+# def scrape_county_codes(county_name):
+#     # Construct the URL for the county's page on the Municode website
+#     base_url = "https://library.municode.com/ga"
+#     search_url = f"{base_url}/search?q={county_name.replace(' ', '%20')}"
+    
+#     try:
+#         # Send a GET request to the search URL
+#         response = requests.get(search_url)
+#         response.raise_for_status()  # Raise an error for bad status codes
+        
+#         # Parse the HTML content
+#         soup = BeautifulSoup(response.text, 'html.parser')
+        
+#         # Find the link to the county's specific page (this selector might need adjustment)
+#         county_link = soup.find('a', text=lambda t: t and county_name.lower() in t.lower())
+#         if not county_link:
+#             print(f"County link not found for {county_name}")
+#             return []  # Return an empty list if no link is found
+        
+#         # Follow the link to the county's page
+#         county_page_url = base_url + county_link['href']
+#         county_page_response = requests.get(county_page_url)
+#         county_page_response.raise_for_status()
+        
+#         # Parse the county's page to extract codes (this part will vary based on the page structure)
+#         county_soup = BeautifulSoup(county_page_response.text, 'html.parser')
+#         codes = []
+        
+#         # Example: Find all elements with a specific class that contains the codes
+#         for code_element in county_soup.find_all('div', class_='code'):
+#             codes.append(code_element.text.strip())
+#         if not codes:
+#             print(f"No codes found for {county_name}")
+#         return codes
+#     except Exception as e:
+#         print(f"Error scraping codes for {county_name}: {e}")
+#         return []
+
 
 ###
 # Convers an address into latitude and longitude using the Google Maps Geocoding API
@@ -175,6 +275,20 @@ def index():
     app.logger.debug('codes: ' + str(codes))
     return render_template('index.html', codes=codes)
 
+# new page for about us 
+@app.route('/about-us')
+def about_us():
+    return render_template('about_us.html')
+
+# new page for projects  
+@app.route('/projects')
+def projects():
+    return render_template('projects.html')
+
+@app.route('/contact-us')
+def contact_us():
+    return render_template('contact_us.html')
+
 ###
 # Purpose: handles address lookup request 
 # steps: 
@@ -191,14 +305,25 @@ def lookup():
     code_type = request.json.get('codeType')
     if not address or not code_type:
         return jsonify({'error': 'Address required'}), 400
-
+    
     lat, lon = geocode_address(address)
     if lat is None or lon is None:
         return jsonify({'error': 'Failed to geocode address'}), 400
-
+    ####
+    # commented out the stuff below to hard code it to fulton 
+    ###
     jurisdiction, geojson = get_county(lat, lon)
     print(jurisdiction)
     county_url = get_county_url(jurisdiction)
+    ####
+    # commented out the stuff above to hard code it to fulton 
+    # below is the hardcode 
+    ###
+    # jurisdiction = "Fulton County"
+    # geojson = '{"type":"Polygon","coordinates":[[[-84.39, 33.75]]]}'
+    # county_url = get_county_url(jurisdiction)
+     
+
     # Always return a JSON response
     #print(county_url)
     # hard coded for now but we will build database or table for this info

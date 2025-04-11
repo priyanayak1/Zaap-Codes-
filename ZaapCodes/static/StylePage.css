@@ -203,3 +203,17 @@ h1 {
     border-radius: 5px;
     margin-bottom: 5px;
 }
+
+.about-section {
+    padding: 20px;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    max-width: 800px;
+    margin: auto;
+    font-size: 1.1em;
+  }
+  .about-section h2 {
+    margin-top: 20px;
+    color: #333;
+  }

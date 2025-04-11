@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Projects - ZaapCodes</title>
+  <link rel="stylesheet" href="/static/StylePage.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    .projects-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+    .profile-header {
+      background-color: #20232a;
+      color: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+    .profile-header h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .section {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .section h3 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #333;
+    }
+    .project-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .project-item:last-child {
+      border-bottom: none;
+    }
+    .new-project-btn {
+      background-color: #4f46e5;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .new-project-btn:hover {
+      background-color: #3730a3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+    <a href="/about-us">About Us</a>
+    <a href="/search">Search</a>
+    <a href="/zappy">Zappy</a>
+    <a href="/projects">Projects</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/contact-us">Contact Us</a>
+  </div>
+  <span id="open-btn" onclick="openSidebar()">&#9776;</span>
+
+  <!-- Main content -->
+  <div class="content">
+    <div class="projects-container">
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <h2>👷 Welcome, Project User</h2>
+        <p>Manage your code lookups and saved construction project info.</p>
+      </div>
+
+      <!-- Saved History -->
+      <div class="section">
+        <h3>📚 Saved History</h3>
+        <div class="project-item">123 Main Street - Building Code Lookup</div>
+        <div class="project-item">456 Peach Avenue - Fire Code Info</div>
+      </div>
+
+      <!-- Previous Projects -->
+      <div class="section">
+        <h3>🗂 Previous Projects</h3>
+        <div class="project-item">Peachtree Heights - Residential Build</div>
+        <div class="project-item">Downtown ATL Retail Renovation</div>
+      </div>
+
+      <!-- Create New Project -->
+      <div class="section" style="text-align: center;">
+        <button class="new-project-btn">➕ Create New Project</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function openSidebar() {
+      document.getElementById("sidebar").style.width = "250px";
+      document.querySelector(".content").style.marginLeft = "250px";
+    }
+    function closeSidebar() {
+      document.getElementById("sidebar").style.width = "0";
+      document.querySelector(".content").style.marginLeft = "0";
+    }
+  </script>
+
+</body>
+</html>
