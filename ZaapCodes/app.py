@@ -4,19 +4,9 @@ import psycopg2 as psycopg
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import chatbot
-#from scraper import scrape_fulton_building_code;
 from Code import Code
 from ChatItem import ChatItem
 from scraper import extract_full_pdf_text;
-
-# from bs4 import BeautifulSoup
-
-# # selenium imports 
-# from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver.common.by import By
-# import time
-# import csv
 
 
 load_dotenv() # loads the environment variables
@@ -26,120 +16,26 @@ app = Flask(__name__) # creates the Flask app
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
 
-codes = [
-    Code(
-        title="Code 1 Title",
-        short_description="Code 1 short description",
-        full_description="Code 1 full description",
-        source_link="link to code 1"
-    ),
-    Code(
-        title="Code 2 Title",
-        short_description="Code 2 short description",
-        full_description="Code 2 full description",
-        source_link="link to code 2"
-    ),
-    Code(
-        title="Code 3 Title",
-        short_description="Code 3 short description",
-        full_description="Code 3 full description",
-        source_link="link to code 3"
-    )
-]
-# def scrape_chapter_14_details():
-#     url = "https://library.municode.com/ga/fulton_county/codes/code_of_ordinances?nodeId=PTIICOORCORE_CH14BUBURE"
-
-#     options = Options()
-#     # options.add_argument('--headless')
-#     options.add_argument('--disable-gpu')
-#     options.add_argument('--no-sandbox')
-#     options.add_argument('--disable-dev-shm-usage')
-
-#     driver = webdriver.Chrome(options=options)
-
-#     try:
-#         print("navigating to municode")
-#         driver.get(url)
-#         time.sleep(4)
-        
-#         print("looking for title")
-#         # Grab the title of the chapter
-#         title_elem = driver.find_element(By.CLASS_NAME, "reader-node__header__title")
-#         title = title_elem.text.strip()
-#         print("title found ", title)
-#         print("looking for content...")
-#         # Grab the full description (content of chapter)
-#         content_elem = driver.find_element(By.CLASS_NAME, "reader-node__content")
-#         full_description = content_elem.text.strip()
-#         print("found content ")
-        
-#         # Create a short description (first paragraph or first 200 chars)
-#         # short_description = full_description.split('\n')[0][:200]
-#         short_description = full_description[:300] + "..." if len(full_description) > 300 else full_description
-
-#         return Code(
-#             title=title,
-#             short_description=short_description,
-#             full_description=full_description,
-#             source_link=url
-#         )
-#     # except NoSuchElementException as e:
-#     #     print("❌ Element not found:", e)
-#     #     return None
-#     except Exception as e:
-#         print(f"Scraping failed: {e}")
-#         return None
-#     finally:
-#         driver.quit()
-
-# codes = []
-# fulton_code = scrape_chapter_14_details()
-# if fulton_code:
-#     codes.append(fulton_code)
-
-# code = scrape_chapter_14_details()
-
-
-
-# def scrape_county_codes(county_name):
-#     # Construct the URL for the county's page on the Municode website
-#     base_url = "https://library.municode.com/ga"
-#     search_url = f"{base_url}/search?q={county_name.replace(' ', '%20')}"
-    
-#     try:
-#         # Send a GET request to the search URL
-#         response = requests.get(search_url)
-#         response.raise_for_status()  # Raise an error for bad status codes
-        
-#         # Parse the HTML content
-#         soup = BeautifulSoup(response.text, 'html.parser')
-        
-#         # Find the link to the county's specific page (this selector might need adjustment)
-#         county_link = soup.find('a', text=lambda t: t and county_name.lower() in t.lower())
-#         if not county_link:
-#             print(f"County link not found for {county_name}")
-#             return []  # Return an empty list if no link is found
-        
-#         # Follow the link to the county's page
-#         county_page_url = base_url + county_link['href']
-#         county_page_response = requests.get(county_page_url)
-#         county_page_response.raise_for_status()
-        
-#         # Parse the county's page to extract codes (this part will vary based on the page structure)
-#         county_soup = BeautifulSoup(county_page_response.text, 'html.parser')
-#         codes = []
-        
-#         # Example: Find all elements with a specific class that contains the codes
-#         for code_element in county_soup.find_all('div', class_='code'):
-#             codes.append(code_element.text.strip())
-#         if not codes:
-#             print(f"No codes found for {county_name}")
-#         return codes
-#     except Exception as e:
-#         print(f"Error scraping codes for {county_name}: {e}")
-#         return []
-
-
+# codes = [
+#     Code(
+#         title="Code 1 Title",
+#         short_description="Code 1 short description",
+#         full_description="Code 1 full description",
+#         source_link="link to code 1"
+#     ),
+#     Code(
+#         title="Code 2 Title",
+#         short_description="Code 2 short description",
+#         full_description="Code 2 full description",
+#         source_link="link to code 2"
+#     ),
+#     Code(
+#         title="Code 3 Title",
+#         short_description="Code 3 short description",
+#         full_description="Code 3 full description",
+#         source_link="link to code 3"
+#     )
+# ]
 ###
 # Convers an address into latitude and longitude using the Google Maps Geocoding API
 # 1. sends a request to the Google Maps Geocoding API
@@ -169,18 +65,6 @@ def geocode_address(address):
     except Exception as e:
         print(f"Error during geocoding: {e}")
         return None, None
-
-def get_county_url(county_name):
-    county_name = county_name + '_county'
-    # Convert the county name to the format used in the URL
-    formatted_name = county_name.lower().replace(" ", "").replace("-", "")
-    
-    # Construct the URL
-    base_url = "https://library.municode.com/ga"
-    county_url = f"{base_url}/{formatted_name}/codes/code_of_ordinances"
-    #  https://library.municode.com/ga/fulton/codes/code_of_ordinances
-
-    return county_url
 
 ###
 # Connects to PostgreSQL database using credentials from environment variables
@@ -272,8 +156,7 @@ def find_jurisdiction(lat, lon):
 # Renders the homepage (index.html).
 @app.route('/')
 def index():
-    app.logger.debug('codes: ' + str(codes))
-    return render_template('index.html', codes=codes)
+    return render_template('index.html')
 
 # new page for about us 
 @app.route('/about-us')
@@ -314,35 +197,16 @@ def lookup():
     ###
     jurisdiction, geojson = get_county(lat, lon)
     print(jurisdiction)
-    county_url = get_county_url(jurisdiction)
-    ####
-    # commented out the stuff above to hard code it to fulton 
-    # below is the hardcode 
-    ###
-    # jurisdiction = "Fulton County"
-    # geojson = '{"type":"Polygon","coordinates":[[[-84.39, 33.75]]]}'
-    # county_url = get_county_url(jurisdiction)
-     
 
-    # Always return a JSON response
-    #print(county_url)
-    # hard coded for now but we will build database or table for this info
-    #county_name = jurisdiction.split()[0]  # Simple way to normalize "Fulton County" to "Fulton"
     code_info = f"Click below to view the {code_type.replace('_', ' ').title()} Codes."
-# If no manual code found, try scraping
-#     if not code_info and county_name == "Fulton" and code_type == "building":
-#         code_info = scrape_fulton_building_code()
 
-# # If still nothing found, default error message
-#     if not code_info:
-#         code_info = "Code information not available for this selection."
 
     return jsonify({
         'jurisdiction': jurisdiction,
         'geojson': geojson,
         'lat': lat,
         'lon': lon,
-        'county_url': county_url,
+        # 'county_url': county_url,
         'code_type': code_type,
         'code_info': code_info
     }), 200
@@ -367,20 +231,6 @@ def code_page(code_type):
     full_text = extract_full_pdf_text(pdf_path)
 
     return render_template('building_codes.html', full_text=full_text, code_type=code_type, county_name = county_name, code_type_to_pdf=code_type_to_pdf) 
-
-# def get_code(id: int) -> Code:
-#     return codes[id]
-
-# @app.route('/<int:id>/code_page', methods=['GET'])
-# def specific_code_page(id):
-#     code = get_code(id)
-
-#     app.logger.debug("opening code page for : " + code.title)
-
-#     return render_template(
-#         'code_page.html',
-#         code=code
-#     )
 
 # CHAT STUFF   
 

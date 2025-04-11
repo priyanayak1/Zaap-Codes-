@@ -89,6 +89,8 @@
 
       const address = document.getElementById('address').value;
       const codeType = document.getElementById('codeType').value;
+      localStorage.setItem('savedAddress', address);
+      localStorage.setItem('savedCodeType', codeType);
 
       // Send a POST request to the Flask backend
 
@@ -106,9 +108,6 @@
           document.getElementById('result').innerHTML = `
           <h3>${data.jurisdiction} - ${data.code_type.charAt(0).toUpperCase() + data.code_type.slice(1)} Code</h3>
           <p>${data.code_info}</p>
-          <a href="${data.county_url}" target="_blank" style="display: block; margin-top: 10px;">
-            View Full County Codes (Municode)
-          </a>
       ${data.code_type  ? `
        <a href="/codes/${data.code_type}?county=${encodeURIComponent(data.jurisdiction)}" style="
       display: inline-block; 
@@ -140,6 +139,18 @@
         document.getElementById('result').innerText = 'An error occurred. Please try again.';
       });
     });
+
+    window.addEventListener('load', function () {
+    const savedAddress = localStorage.getItem('savedAddress');
+    const savedCodeType = localStorage.getItem('savedCodeType');
+
+    if (savedAddress) {
+      document.getElementById('address').value = savedAddress;
+    }
+    if (savedCodeType) {
+      document.getElementById('codeType').value = savedCodeType;
+    }
+  });
   </script>
 
 <!-- Code list Contains -->
