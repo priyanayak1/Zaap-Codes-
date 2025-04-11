@@ -207,6 +207,7 @@ def find_jurisdiction(lat, lon):
 
 # Renders the homepage (index.html).
 @app.route('/')
+@app.route('/search', methods=['GET'])
 def index():
     codes = global_codes
     app.logger.debug('codes: ' + str(codes))
