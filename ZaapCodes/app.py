@@ -279,26 +279,32 @@ def get_code(id: int) -> Code:
 @app.route('/<int:id>/code_page', methods=['GET'])
 def code_page(id):
     code = get_code(id)
+    codes = global_codes
 
     app.logger.debug("opening code page for : " + code.title)
 
     return render_template(
         'code_page.html',
-        code=code
+        code=code,
+        global_codes=global_codes
     )
 
 user_codes = []
-@app.route('/save_code', methods=['POST'])
-def save_code():
+@app.route('/<int:id>/save_code', methods=['POST', 'GET'])
+def save_code(id):
     app.logger.debug("Saving new code.")
     user_codes.append(get_code(id))
-    return redirect(url_for("saved_codes"))
+    return redirect(url_for("saved"))
 
 @app.route('/saved')
-def logout():
+def saved():
     # need to select codes for user
     codes = user_codes
-    return render_template("saved_codes.html")
+    app.logger.debug(codes)
+    return render_template(
+        "saved_codes.html",
+        codes = codes
+    )
 
 # runs the app 
 if __name__ == '__main__':

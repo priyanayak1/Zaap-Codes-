@@ -106,6 +106,7 @@ def login():
             current_app.logger.debug("User logged in.")
             return redirect(url_for('index'))
 
+        current_app.logger.debug(error)
         flash(error)
 
     return render_template('auth/login.html')
