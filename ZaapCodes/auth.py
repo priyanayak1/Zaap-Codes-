@@ -32,13 +32,18 @@ def get_db():
     current_app.logger.debug("DB_AUTH_HOST : "+ host)
     current_app.logger.debug("DB_AUTH_PORT : "+ port)
     
-    conn = psycopg.connect(
-        dbname=os.getenv("DB_AUTH_NAME"),
-        user=os.getenv("DB_AUTH_USER"),
-        password=os.getenv("DB_AUTH_PASSWORD"),
-        host=os.getenv("DB_AUTH_HOST"),
-        port=os.getenv("DB_AUTH_PORT")
-    )
+    try:
+        conn = psycopg.connect(
+            dbname=os.getenv("DB_AUTH_NAME"),
+            user=os.getenv("DB_AUTH_USER"),
+            password=os.getenv("DB_AUTH_PASSWORD"),
+            host=os.getenv("DB_AUTH_HOST"),
+            port=os.getenv("DB_AUTH_PORT")
+        )
+
+    except:
+        current_app.logger.info("Cannot connect to database")
+        conn = None
 
     current_app.logger.debug(conn)
     return conn
@@ -82,6 +87,7 @@ def login():
         password = request.form['password']
         db = get_db()
         error = None
+        
         user = db.execute(
             'SELECT * FROM auth WHERE username = %s', (username,)
         ).fetchone()
@@ -110,7 +116,7 @@ def load_logged_in_user():
 
     if user_id is None:
         g.user = None
-    else:
+    elif get_db():
         g.user = get_db().execute(
             'SELECT * FROM auth WHERE id = %s', (user_id,)
         ).fetchone()

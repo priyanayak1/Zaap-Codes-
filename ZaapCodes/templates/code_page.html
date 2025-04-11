@@ -9,4 +9,7 @@
     <p>{{ code.full_description }}</p>
     <link href="code.source_link" />
 </div>
+{% if g.user %}
+<button type="submit" id="save" action="/save_code">Save Code</button>
+{% endif %}
 {% endblock %}

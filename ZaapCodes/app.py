@@ -1,7 +1,7 @@
 import os
 import requests
 import psycopg as psycopg
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from dotenv import load_dotenv
 import chatbot
 import auth
@@ -17,7 +17,7 @@ app.register_blueprint(auth.bp)
 
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
-codes = [
+global_codes = [
     Code(
         title="Code 1 Title",
         short_description="Code 1 short description",
@@ -208,6 +208,7 @@ def find_jurisdiction(lat, lon):
 # Renders the homepage (index.html).
 @app.route('/')
 def index():
+    codes = global_codes
     app.logger.debug('codes: ' + str(codes))
     return render_template('index.html', codes=codes)
 
@@ -272,7 +273,7 @@ def chat():
     return render_template('index.html', chat_items=chat_items, chatbot_open=True)
 
 def get_code(id: int) -> Code:
-    return codes[id]
+    return global_codes[id]
 
 @app.route('/<int:id>/code_page', methods=['GET'])
 def code_page(id):
@@ -284,6 +285,19 @@ def code_page(id):
         'code_page.html',
         code=code
     )
+
+user_codes = []
+@app.route('/save_code', methods=['POST'])
+def save_code():
+    app.logger.debug("Saving new code.")
+    user_codes.append(get_code(id))
+    return redirect(url_for("saved_codes"))
+
+@app.route('/saved')
+def logout():
+    # need to select codes for user
+    codes = user_codes
+    return render_template("saved_codes.html")
 
 # runs the app 
 if __name__ == '__main__':
