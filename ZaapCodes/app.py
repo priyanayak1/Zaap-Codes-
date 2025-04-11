@@ -1,9 +1,10 @@
 import os
 import requests
-import psycopg2 as psycopg
-from flask import Flask, render_template, request, jsonify
+import psycopg as psycopg
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from dotenv import load_dotenv
 import chatbot
+import auth
 
 from Code import Code
 from ChatItem import ChatItem
@@ -15,10 +16,11 @@ from county_codes import county_code_info;
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
+app.register_blueprint(auth.bp)
 
 # CODE PAGE DEMO 
 # TODO : move to appropriate file
-codes = [
+global_codes = [
     Code(
         title="Code 1 Title",
         short_description="Code 1 short description",
@@ -208,7 +210,9 @@ def find_jurisdiction(lat, lon):
 
 # Renders the homepage (index.html).
 @app.route('/')
+@app.route('/search', methods=['GET'])
 def index():
+    codes = global_codes
     app.logger.debug('codes: ' + str(codes))
     return render_template('index.html', codes=codes)
 
@@ -279,19 +283,39 @@ def chat():
     return render_template('index.html', chat_items=chat_items, chatbot_open=True)
 
 def get_code(id: int) -> Code:
-    return codes[id]
+    return global_codes[id]
 
 @app.route('/<int:id>/code_page', methods=['GET'])
 def code_page(id):
     code = get_code(id)
+    codes = global_codes
 
     app.logger.debug("opening code page for : " + code.title)
 
     return render_template(
         'code_page.html',
-        code=code
+        code=code,
+        global_codes=global_codes
+    )
+
+user_codes = []
+@app.route('/<int:id>/save_code', methods=['POST', 'GET'])
+def save_code(id):
+    app.logger.debug("Saving new code.")
+    user_codes.append(get_code(id))
+    return redirect(url_for("saved"))
+
+@app.route('/saved')
+def saved():
+    # need to select codes for user
+    codes = user_codes
+    app.logger.debug(codes)
+    return render_template(
+        "saved_codes.html",
+        codes = codes
     )
 
 # runs the app 
 if __name__ == '__main__':
+    app.secret_key = 'parangaricutirimicuaro'
     app.run(debug=True, port=5001)

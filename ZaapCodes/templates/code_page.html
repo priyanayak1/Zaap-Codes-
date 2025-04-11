@@ -9,4 +9,9 @@
     <p>{{ code.full_description }}</p>
     <link href="code.source_link" />
 </div>
+{% if g.user %}
+<a href="{{ url_for('save_code', id=global_codes.index(code)) }}">
+    <button type="submit" id="save">Save Code</button>
+</a>
+{% endif %}
 {% endblock %}
