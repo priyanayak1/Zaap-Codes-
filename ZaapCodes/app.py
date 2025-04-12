@@ -315,6 +315,18 @@ def saved():
         codes = codes
     )
 
+@app.route('/zappy', methods=['GET'])
+def zappy():
+    return render_template('zappy.html')
+
+@app.route('/projects', methods=['GET'])
+def projects():
+    return render_template('projects.html')
+
+@app.route('/privacy', methods=['GET'])
+def privacy():
+    return render_template('privacy.html')
+
 # runs the app 
 if __name__ == '__main__':
     app.secret_key = 'parangaricutirimicuaro'
