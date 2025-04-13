@@ -13,29 +13,6 @@ load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
 
-# CODE PAGE DEMO 
-# TODO : move to appropriate file
-
-# codes = [
-#     Code(
-#         title="Code 1 Title",
-#         short_description="Code 1 short description",
-#         full_description="Code 1 full description",
-#         source_link="link to code 1"
-#     ),
-#     Code(
-#         title="Code 2 Title",
-#         short_description="Code 2 short description",
-#         full_description="Code 2 full description",
-#         source_link="link to code 2"
-#     ),
-#     Code(
-#         title="Code 3 Title",
-#         short_description="Code 3 short description",
-#         full_description="Code 3 full description",
-#         source_link="link to code 3"
-#     )
-# ]
 ###
 # Convers an address into latitude and longitude using the Google Maps Geocoding API
 # 1. sends a request to the Google Maps Geocoding API
