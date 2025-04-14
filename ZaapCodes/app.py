@@ -255,10 +255,10 @@ def get_code(id: int) -> Code:
 #     return redirect(url_for('index'))
 
 user_codes = []
-@app.route('/<int:id>/save_code', methods=['POST', 'GET'])
-def save_code(id):
+@app.route('/<county>-<code_type>/save_code', methods=['POST', 'GET'])
+def save_code(county, code_type):
     app.logger.debug("Saving new code.")
-    user_codes.append(get_code(id))
+    user_codes.append(Code(county=county, code_type=code_type))
     return redirect(url_for("saved"))
 
 @app.route('/saved')

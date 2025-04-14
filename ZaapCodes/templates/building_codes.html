@@ -145,6 +145,13 @@
   <div class="pdf-text">
     {{ full_text | safe }}
   </div>
+
+{% if g.user %}
+<a href="{{ url_for('save_code', county_name=county_name, code_type=code_type) }}">
+    <button type="submit" id="save">Save Code</button>
+</a>
+{% endif %}
+
 </div>
 
 </body>
