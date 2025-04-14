@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>ZaapCodes</title>
-  <!-- Add favicon DOES NOT WORK-->
+  <!-- Add favicon -->
   <link rel="icon" type ="image/x-icon" href="static/favicon.ico"/> 
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -15,8 +15,16 @@
   <!-- Sidebar -->
   <div id="sidebar">
     <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+    {% if g.user %}
+      <span>{{ g.user['username'] }}</span>
+      <a href="{{ url_for('auth.logout') }}">Log Out</a>
+      <a href="/saved">Saved Codes</a>
+    {% else %}
+      <a href="{{ url_for('auth.register') }}">Register</a>
+      <a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
     <a href="/about-us">About Us</a>
-    <a href="/search">Search</a>
+    <a href="/">Search</a>
     <a href="/zappy">Zappy</a>
     <a href="/projects">Projects</a>
     <a href="/privacy">Privacy</a>

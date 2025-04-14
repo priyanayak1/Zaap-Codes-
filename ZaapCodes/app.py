@@ -1,9 +1,14 @@
 import os
 import requests
-import psycopg2 as psycopg
-from flask import Flask, render_template, request, jsonify
+import psycopg as psycopg
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from dotenv import load_dotenv
 import chatbot
+<<<<<<< HEAD
+=======
+import auth
+
+>>>>>>> main
 from Code import Code
 from ChatItem import ChatItem
 from scraper import extract_full_pdf_text;
@@ -12,7 +17,72 @@ from scraper import extract_full_pdf_text;
 load_dotenv() # loads the environment variables
 
 app = Flask(__name__) # creates the Flask app
+app.register_blueprint(auth.bp)
 
+<<<<<<< HEAD
+=======
+# CODE PAGE DEMO 
+# TODO : move to appropriate file
+global_codes = [
+    Code(
+        title="Code 1 Title",
+        short_description="Code 1 short description",
+        full_description="Code 1 full description",
+        source_link="link to code 1"
+    ),
+    Code(
+        title="Code 2 Title",
+        short_description="Code 2 short description",
+        full_description="Code 2 full description",
+        source_link="link to code 2"
+    ),
+    Code(
+        title="Code 3 Title",
+        short_description="Code 3 short description",
+        full_description="Code 3 full description",
+        source_link="link to code 3"
+    )
+]
+
+def scrape_county_codes(county_name):
+    # Construct the URL for the county's page on the Municode website
+    base_url = "https://library.municode.com/ga"
+    search_url = f"{base_url}/search?q={county_name.replace(' ', '%20')}"
+    
+    try:
+        # Send a GET request to the search URL
+        response = requests.get(search_url)
+        response.raise_for_status()  # Raise an error for bad status codes
+        
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Find the link to the county's specific page (this selector might need adjustment)
+        county_link = soup.find('a', text=lambda t: t and county_name.lower() in t.lower())
+        if not county_link:
+            print(f"County link not found for {county_name}")
+            return []  # Return an empty list if no link is found
+        
+        # Follow the link to the county's page
+        county_page_url = base_url + county_link['href']
+        county_page_response = requests.get(county_page_url)
+        county_page_response.raise_for_status()
+        
+        # Parse the county's page to extract codes (this part will vary based on the page structure)
+        county_soup = BeautifulSoup(county_page_response.text, 'html.parser')
+        codes = []
+        
+        # Example: Find all elements with a specific class that contains the codes
+        for code_element in county_soup.find_all('div', class_='code'):
+            codes.append(code_element.text.strip())
+        if not codes:
+            print(f"No codes found for {county_name}")
+        return codes
+    except Exception as e:
+        print(f"Error scraping codes for {county_name}: {e}")
+        return []
+
+>>>>>>> main
 ###
 # Convers an address into latitude and longitude using the Google Maps Geocoding API
 # 1. sends a request to the Google Maps Geocoding API
@@ -132,7 +202,9 @@ def find_jurisdiction(lat, lon):
 
 # Renders the homepage (index.html).
 @app.route('/')
+@app.route('/search', methods=['GET'])
 def index():
+<<<<<<< HEAD
     return render_template('index.html')
 
 # new page for about us 
@@ -148,6 +220,11 @@ def projects():
 @app.route('/contact-us')
 def contact_us():
     return render_template('contact_us.html')
+=======
+    codes = global_codes
+    app.logger.debug('codes: ' + str(codes))
+    return render_template('index.html', codes=codes)
+>>>>>>> main
 
 ###
 # Purpose: handles address lookup request 
@@ -234,6 +311,58 @@ def chat():
     # TODO: ideally we should refresh the chatbot box instead of the whole page somehow
     return render_template('index.html', chat_items=chat_items, chatbot_open=True)
 
+<<<<<<< HEAD
 # runs the app 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+=======
+def get_code(id: int) -> Code:
+    return global_codes[id]
+
+@app.route('/<int:id>/code_page', methods=['GET'])
+def code_page(id):
+    code = get_code(id)
+    codes = global_codes
+
+    app.logger.debug("opening code page for : " + code.title)
+
+    return render_template(
+        'code_page.html',
+        code=code,
+        global_codes=global_codes
+    )
+
+user_codes = []
+@app.route('/<int:id>/save_code', methods=['POST', 'GET'])
+def save_code(id):
+    app.logger.debug("Saving new code.")
+    user_codes.append(get_code(id))
+    return redirect(url_for("saved"))
+
+@app.route('/saved')
+def saved():
+    # need to select codes for user
+    codes = user_codes
+    app.logger.debug(codes)
+    return render_template(
+        "saved_codes.html",
+        codes = codes
+    )
+
+@app.route('/zappy', methods=['GET'])
+def zappy():
+    return render_template('zappy.html')
+
+@app.route('/projects', methods=['GET'])
+def projects():
+    return render_template('projects.html')
+
+@app.route('/privacy', methods=['GET'])
+def privacy():
+    return render_template('privacy.html')
+
+# runs the app 
+if __name__ == '__main__':
+    app.secret_key = 'parangaricutirimicuaro'
+    app.run(debug=True, port=5001)
+>>>>>>> main
