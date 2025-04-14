@@ -1,27 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<!--This is the Home Page-->
 <head>
   <meta charset="UTF-8">
-  <title>ZaapCodes: Projects</title>
-  <!-- Add favicon -->
-  <link rel="icon" type ="image/x-icon" href="../static/favicon.ico"/> 
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="../static/StylePage.css" />
+  <title>About Us - ZaapCodes</title>
+  <link rel="stylesheet" href="/static/StylePage.css">
 </head>
-
 <body>
   <!-- Sidebar -->
   <div id="sidebar">
     <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
-    {% if g.user %}
-      <span>{{ g.user['username'] }}</span>
-      <a href="{{ url_for('auth.logout') }}">Log Out</a>
-    {% else %}
-      <a href="{{ url_for('auth.register') }}">Register</a>
-      <a href="{{ url_for('auth.login') }}">Log In</a>
-    {% endif %}
     <a href="/about-us">About Us</a>
     <a href="/search">Search</a>
     <a href="/zappy">Zappy</a>
@@ -35,24 +22,29 @@
 
   <!-- Main content -->
   <div class="content">
-    <!-- Header with image and slogan -->
     <div class="header-container">
       <img src="/static/ZappyConst_image.jpg" alt="ZaapCodes Logo">
       <div>
-        <h1>ZaapCodes</h1>
-        <p class="slogan">Getting codes in a zap &#128498;</p>
+        <h1>About Us</h1>
+        <p class="slogan">Meet Zappy and his buddies who have made this possible</p>
       </div>
     </div>
 
-    <h2>Projects</h2>
-    
-</div>
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Custom script -->
-  <script src="../static/script.js"></script>
+    <div class="main-content">
+      <div class="about-section">
+        <h2>Our Mission</h2>
+        <p>ZaapCodes is dedicated to making building codes accessible, fast, and easy to understand for developers, architects, contractors, and the general public. We zap you the code info you need – instantly!</p>
+
+        <h2>What We Do</h2>
+        <p>We combine data scraping, geolocation, and intuitive UI to help users find the relevant construction codes for any address in Georgia. Our mission is to take the confusion out of code compliance.</p>
+
+        <h2>Our Team</h2>
+        <p>We’re a small team of engineers and designers passionate about civic tech, building tools that help communities navigate bureaucracy with ease.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // JavaScript to handle sidebar open/close
     function openSidebar() {
       document.getElementById("sidebar").style.width = "250px";
       document.querySelector(".content").style.marginLeft = "250px";
@@ -61,7 +53,6 @@
       document.getElementById("sidebar").style.width = "0";
       document.querySelector(".content").style.marginLeft = "0";
     }
-   </script>
-
+  </script>
 </body>
 </html>

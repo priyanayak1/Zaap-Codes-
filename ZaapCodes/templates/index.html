@@ -51,8 +51,12 @@
       <select id="codeType" required>
         <option value="" disabled selected>Select Code Type</option>
         <option value="building">Building Code</option>
-        <option value="fire">Fire Code</option>
+        <option value="residential">Residential Code</option>
         <option value="plumbing">Plumbing Code</option>
+        <option value="mechanical">Mechanical Code</option>
+        <option value="fuel_gas">Fuel Gas Code</option>
+        <option value="energy_conservation">Energy Conservation Code</option>
+       
       </select>
       <button type="submit" id="submitAddress">Find Jurisdiction</button>
     </form>
@@ -93,6 +97,8 @@
 
       const address = document.getElementById('address').value;
       const codeType = document.getElementById('codeType').value;
+      localStorage.setItem('savedAddress', address);
+      localStorage.setItem('savedCodeType', codeType);
 
       // Send a POST request to the Flask backend
 
@@ -110,8 +116,22 @@
           document.getElementById('result').innerHTML = `
           <h3>${data.jurisdiction} - ${data.code_type.charAt(0).toUpperCase() + data.code_type.slice(1)} Code</h3>
           <p>${data.code_info}</p>
-          <a href="${data.county_url}" target="_blank">View Full County Codes</a>
-        `;
+      ${data.code_type  ? `
+       <a href="/codes/${data.code_type}?county=${encodeURIComponent(data.jurisdiction)}" style="
+      display: inline-block; 
+      margin-top: 10px; 
+      padding: 10px 20px; 
+      background-color: #4CAF50; 
+      color: white; 
+      text-decoration: none; 
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      ">
+        📄 View ${data.code_type.charAt(0).toUpperCase() + data.code_type.slice(1).replace('_', ' ')} Code
+      </a>
+      ` : ''}
+    `;
         if (boundaryLayer) {
           map.removeLayer(boundaryLayer); // remove old layer if exists
         }
@@ -127,10 +147,21 @@
         document.getElementById('result').innerText = 'An error occurred. Please try again.';
       });
     });
+
+    window.addEventListener('load', function () {
+    const savedAddress = localStorage.getItem('savedAddress');
+    const savedCodeType = localStorage.getItem('savedCodeType');
+
+    if (savedAddress) {
+      document.getElementById('address').value = savedAddress;
+    }
+    if (savedCodeType) {
+      document.getElementById('codeType').value = savedCodeType;
+    }
+  });
   </script>
 
 <!-- Code list Contains -->
-{% include 'code_list_container.html' %}
 
 <!-- Chatbot Container -->
 {% include 'chatbot_container.html' %}

@@ -1,8 +1,0 @@
-<div class="codes_container">
-    {% for code in codes %}
-        <div class="code-item">
-            <p><a href="{{ url_for('code_page', id=codes.index(code)) }}">{{code.title}}</a></p>
-            <p>{{code.short_description}}</p>
-        </div>
-    {% endfor %}
-</div>

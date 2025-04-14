@@ -5,13 +5,30 @@
 {% block slogan %}{{ code.short_description }}{% endblock %}
 
 {% block content %}
-<div class="code-content">
-    <p>{{ code.full_description }}</p>
-    <link href="code.source_link" />
+<div class="container py-4">
+    <div class="card shadow-sm rounded-3 p-4 mb-4">
+        <h2 class="mb-3">{{ code.title }}</h2>
+        
+        <p class="text-muted mb-4">{{ code.short_description }}</p>
+
+        <div class="code-full-description" style="white-space: pre-wrap; line-height: 1.6;">
+            {{ code.full_description }}
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ code.source_link }}" target="_blank" class="btn btn-primary">
+                🔗 View Full Code on Municode
+            </a>
+        </div>
+    </div>
 </div>
+<<<<<<< HEAD
+{% endblock %}
+=======
 {% if g.user %}
 <a href="{{ url_for('save_code', id=global_codes.index(code)) }}">
     <button type="submit" id="save">Save Code</button>
 </a>
 {% endif %}
 {% endblock %}
+>>>>>>> main
