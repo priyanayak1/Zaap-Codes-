@@ -1,0 +1,9 @@
+<div class="codes_container">
+    {% for code in codes %}
+    <div class="code">
+        <p>{{code.county_name}}</p>
+        <p>{{code.code_type}}</p>
+        <a href="/codes/{{code.code_type}}">Code Page</a>
+    </div>
+    {% endfor %}
+</div>

@@ -255,16 +255,32 @@ def get_code(id: int) -> Code:
 #     return redirect(url_for('index'))
 
 user_codes = []
-@app.route('/<int:id>/save_code', methods=['POST', 'GET'])
-def save_code(id):
+@app.route('/<county>-<code_type>/save_code', methods=['POST', 'GET'])
+def save_code(county, code_type):
     app.logger.debug("Saving new code.")
-    user_codes.append(get_code(id))
+    user_codes.append(Code(county=county, code_type=code_type))
     return redirect(url_for("saved"))
 
 @app.route('/saved')
 def saved():
     # need to select codes for user
     codes = user_codes
+    app.logger.debug(codes)
+    return render_template(
+        "saved_codes.html",
+        codes = codes
+    )
+
+@app.route('/saved_dummy')
+def saved_dummy():
+    # need to select codes for user
+    codes = [
+        Code(county="Fulton", code_type="Residential"),
+        Code(county="Fulton", code_type="Fire"),
+        Code(county="Clayton", code_type="Residential"),
+        Code(county="Cobb", code_type="Energy"),
+        Code(county="Cobb", code_type="Residential")
+    ]
     app.logger.debug(codes)
     return render_template(
         "saved_codes.html",

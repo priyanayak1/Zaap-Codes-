@@ -1,17 +1,11 @@
 class Code:
-    title = ""
-    short_description = ""
-    full_description = ""
-    source_link = ""
+    county = ""
+    code_type = ""
 
     def __init__(
         self,
-        title: str=title,
-        short_description: str=short_description,
-        full_description: str=full_description,
-        source_link: str=source_link
+        county: str=county,
+        code_type: str=code_type
     ):
-        self.title = title
-        self.short_description = short_description
-        self.full_description = full_description
-        self.source_link = source_link
+        self.county = county
+        self.code_type = code_type
