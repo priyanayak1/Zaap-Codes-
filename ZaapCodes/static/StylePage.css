@@ -19,7 +19,7 @@ ul,li { list-style-type: none;
     flex-direction: row;
     height: 80vh; /* adjust based on your needs */
     margin-top: 20px;
-  }
+}
 /* Map styles */
 #map { 
     flex: 2;
@@ -32,28 +32,29 @@ ul,li { list-style-type: none;
     overflow-y: auto; /* makes it scrollable if text is long */
     border-left: 2px solid #ccc;
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-  }
+}
 
-  #info-panel h2 {
+#info-panel h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
-  }
+}
   
-  #info-panel a {
+#info-panel a {
     display: inline-block;
     margin-top: 10px;
     color: #007bff;
     text-decoration: none;
-  }
+}
   
-  #info-panel a:hover {
+#info-panel a:hover {
     text-decoration: underline;
-  }
+}
 
 #address {
     padding: 10px;
     border-radius: 4px;
 }
+
 #submitAddress {
     font-size: 16px;
     margin: 8px 2px;
@@ -249,16 +250,17 @@ h2 {
     margin-bottom: 5px;
 }
 
+
+/* About Us styles */
 .about-section {
     padding: 20px;
-    background-color: #f7f9fc;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.05);
     max-width: 800px;
     margin: auto;
     font-size: 1.1em;
-  }
-  .about-section h2 {
+}
+
+.about-section h2 {
     margin-top: 20px;
-    color: #333;
-  }
+}

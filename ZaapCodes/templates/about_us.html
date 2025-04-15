@@ -1,58 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>About Us - ZaapCodes</title>
-  <link rel="stylesheet" href="/static/StylePage.css">
-</head>
-<body>
-  <!-- Sidebar -->
-  <div id="sidebar">
-    <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
-    <a href="/about-us">About Us</a>
-    <a href="/search">Search</a>
-    <a href="/zappy">Zappy</a>
-    <a href="/projects">Projects</a>
-    <a href="/privacy">Privacy</a>
-    <a href="/contact-us">Contact Us</a>
+{% extends 'base.html' %}
+
+{% block title %} ZaapCodes: About Us {% endblock %}
+{% block header %} About Us {% endblock %}
+{% block slogan %} Meet Zappy and his buddies who have made this possible! {% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="about-section">
+    <h2>Our Mission</h2>
+    <p>ZaapCodes is dedicated to making building codes accessible, fast, and easy to understand for developers, architects, contractors, and the general public. We zap you the code info you need – instantly!</p>
+
+    <h2>What We Do</h2>
+    <p>We combine data scraping, geolocation, and intuitive UI to help users find the relevant construction codes for any address in Georgia. Our mission is to take the confusion out of code compliance.</p>
+
+    <h2>Our Team</h2>
+    <p>We’re a small team of engineers and designers passionate about civic tech, building tools that help communities navigate bureaucracy with ease.</p>
+    <br>
+    <img src="/static/zappies.jpg" alt="The team picture" height="400" width="auto">
   </div>
-
-  <!-- Open sidebar button -->
-  <span id="open-btn" onclick="openSidebar()">&#9776;</span>
-
-  <!-- Main content -->
-  <div class="content">
-    <div class="header-container">
-      <img src="/static/ZappyConst_image.jpg" alt="ZaapCodes Logo">
-      <div>
-        <h1>About Us</h1>
-        <p class="slogan">Meet Zappy and his buddies who have made this possible</p>
-      </div>
-    </div>
-
-    <div class="main-content">
-      <div class="about-section">
-        <h2>Our Mission</h2>
-        <p>ZaapCodes is dedicated to making building codes accessible, fast, and easy to understand for developers, architects, contractors, and the general public. We zap you the code info you need – instantly!</p>
-
-        <h2>What We Do</h2>
-        <p>We combine data scraping, geolocation, and intuitive UI to help users find the relevant construction codes for any address in Georgia. Our mission is to take the confusion out of code compliance.</p>
-
-        <h2>Our Team</h2>
-        <p>We’re a small team of engineers and designers passionate about civic tech, building tools that help communities navigate bureaucracy with ease.</p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function openSidebar() {
-      document.getElementById("sidebar").style.width = "250px";
-      document.querySelector(".content").style.marginLeft = "250px";
-    }
-    function closeSidebar() {
-      document.getElementById("sidebar").style.width = "0";
-      document.querySelector(".content").style.marginLeft = "0";
-    }
-  </script>
-</body>
-</html>
+</div>
+{% endblock %}
+ 
