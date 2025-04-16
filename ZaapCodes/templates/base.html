@@ -8,6 +8,9 @@
   
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="../static/StylePage.css" />
+    
+    {% block head %}{% endblock %}
+
   </head>
 
 <body>
@@ -45,7 +48,7 @@
         </div>
       {% block content %} {% endblock %}
     </div>
-
+    {% block code %} {% endblock %}
     <!-- TODO: let's move this to a static file -->
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

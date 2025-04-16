@@ -277,9 +277,10 @@ def saved_dummy():
     codes = [
         Code(county="Fulton", code_type="Residential"),
         Code(county="Fulton", code_type="Fire"),
-        Code(county="Clayton", code_type="Residential"),
+        Code(county="Clayton", code_type="Plumbing"),
         Code(county="Cobb", code_type="Energy"),
-        Code(county="Cobb", code_type="Residential")
+        Code(county="Cobb", code_type="Building"),
+        Code(county="Cobb", code_type="Fuel")
     ]
     app.logger.debug(codes)
     return render_template(
