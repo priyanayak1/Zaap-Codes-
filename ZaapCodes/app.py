@@ -202,7 +202,7 @@ code_type_to_pdf = {
     "plumbing": "ipc_2024_amendments.pdf",
     "mechanical": "imc_2024_amendments.pdf",
     "fuel_gas": "ifgc_2022_amendments.pdf",
-    "energy_conservation": "iecc_2024_amendments.pdf"
+    "energy_conservation": "iecc_2023_amendments.pdf"
 }
 
 @app.route('/codes/<code_type>')
@@ -255,10 +255,10 @@ def get_code(id: int) -> Code:
 #     return redirect(url_for('index'))
 
 user_codes = []
-@app.route('/<county>-<code_type>/save_code', methods=['POST', 'GET'])
-def save_code(county, code_type):
+@app.route('/<county_name>-<code_type>/save_code', methods=['POST', 'GET'])
+def save_code(county_name, code_type):
     app.logger.debug("Saving new code.")
-    user_codes.append(Code(county=county, code_type=code_type))
+    user_codes.append(Code(county=county_name, code_type=code_type))
     return redirect(url_for("saved"))
 
 @app.route('/saved')
