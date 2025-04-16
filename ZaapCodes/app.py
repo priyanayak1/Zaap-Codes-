@@ -276,11 +276,11 @@ def saved_dummy():
     # need to select codes for user
     codes = [
         Code(county="Fulton", code_type="Residential"),
-        Code(county="Fulton", code_type="Fire"),
+        Code(county="Fulton", code_type="Mechanical"),
         Code(county="Clayton", code_type="Plumbing"),
-        Code(county="Cobb", code_type="Energy"),
+        Code(county="Cobb", code_type="Energy Conservation"),
         Code(county="Cobb", code_type="Building"),
-        Code(county="Cobb", code_type="Fuel")
+        Code(county="Cobb", code_type="Fuel Gas")
     ]
     app.logger.debug(codes)
     return render_template(

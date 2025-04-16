@@ -1,17 +1,7 @@
-<!-- <div class="codes_container">
-    {% for code in codes %}
-    <div class="code">
-        <p>{{code.county_name}}</p>
-        <p>{{code.code_type}}</p>
-        <a href="/codes/{{code.code_type}}">Code Page</a>
-    </div>
-    {% endfor %}
-</div> -->
-
-
 <div class="grid-container">
     {% for code in codes %}
     <div class="card">
+        <!-- Make sure that the href goes to the right code doc -->
       <a href="/codes/{{code.code_type}}">{{code.county}}</a>
       <!-- TODO when you implement this, change the part after code.code_type == 
        to be the name of the actual code type -->
@@ -19,60 +9,22 @@
       
       "tag {% if code.code_type == 'Residential' %}
             residential
-        {% elif code.code_type == 'Fire' %}
-            fire
+        {% elif code.code_type == 'Mechanical' %}
+            mechanical
         {% elif code.code_type == 'Building' %}
             building
-        {% elif code.code_type == 'Energy' %}
+        {% elif code.code_type == 'Energy Conservation' %}
             energy
         {% elif code.code_type == 'Plumbing' %}
             plumbing
-        {% elif code.code_type == 'Fuel' %}
+        {% elif code.code_type == 'Fuel Gas' %}
             fuel
         {% else %}
           default
         {% endif %}">
         {{code.code_type}}
+
         </span>
-      <span class="amended">{{code.code_type}}</span>
     </div>
     {% endfor %}
 </div>
-    <!-- <div class="card">
-      <a href="#">Georgia State Minimum Standard Building Code 2012</a>
-      <span class="tag IBC">IBC 2012</span>
-      <span class="amended">amended</span>
-    </div>
-
-    <div class="card">
-      <a href="#">Georgia State Minimum Standard One and Two Family Dwelling Code 2018</a>
-      <span class="tag IRC">IRC 2018</span>
-      <span class="amended">amended</span>
-    </div>
-
-    <div class="card">
-      <a href="#">Georgia State Minimum Fire Prevention Code 2018</a>
-      <span class="tag IFC">IFC 2018</span>
-      <span class="amended">amended</span>
-    </div>
-
-    <div class="card">
-      <a href="#">Georgia State Minimum Standard Plumbing Code 2018</a>
-      <span class="tag IPC">IPC 2018</span>
-      <span class="amended">amended</span>
-    </div>
-
-    <div class="card">
-      <a href="#">Georgia State Minimum Standard Mechanical Code 2018</a>
-      <span class="tag IMC">IMC 2018</span>
-      <span class="amended">amended</span>
-    </div>
-
-    <div class="card">
-      <a href="#">Georgia State Minimum Standard Gas Code 2018</a>
-      <span class="tag IFGC">IFGC 2018</span>
-      <span class="amended">amended</span>
-    </div>
-
-     Add more cards similarly
-  </div> -->
