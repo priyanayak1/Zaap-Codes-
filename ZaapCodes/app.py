@@ -197,12 +197,12 @@ def lookup():
     }), 200
 
 code_type_to_pdf = {
-    "building": "IBC 2025 Amendments.pdf",
-    "residential": "irc_2024_amendments.pdf",
-    "plumbing": "ipc_2024_amendments.pdf",
-    "mechanical": "imc_2024_amendments.pdf",
-    "fuel_gas": "ifgc_2022_amendments.pdf",
-    "energy_conservation": "iecc_2024_amendments.pdf"
+    "Building": "IBC 2025 Amendments.pdf",
+    "Residential": "irc_2024_amendments.pdf",
+    "Plumbing": "ipc_2024_amendments.pdf",
+    "Mechanical": "imc_2024_amendments.pdf",
+    "Fuel Gas": "ifgc_2022_amendments.pdf",
+    "Energy Conservation": "iecc_2024_amendments.pdf"
 }
 
 @app.route('/codes/<code_type>')
