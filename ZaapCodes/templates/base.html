@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <!-- Add favicon -->
-    <link rel="icon" type ="image/x-icon" href="static/favicon.ico"/> 
+    <link rel="icon" type ="image/x-icon" href="../static/favicon.ico"/> 
   
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="../static/StylePage.css" />
+    
+    {% block head %}{% endblock %}
+
   </head>
 
 <body>
@@ -35,17 +38,17 @@
     
     <!-- Main content -->
     <div class="content">
-        <header>
-            <div class="header-container">
-                    <img src="/assets/logo.png" alt="ZaapCodes Logo">
-                    <h1>{% block header %}{% endblock %}</h1>
-                    <p class="slogan">{% block slogan %}{% endblock %}</p>
+      <!-- Header with image and slogan -->
+        <div class="header-container">
+            <img src="/static/ZappyConst_image.jpg" alt="ZaapCodes Logo">
+            <div>
+              <h1>{% block header %}{% endblock %}</h1>
+              <p class="slogan">{% block slogan %}{% endblock %}</p>
             </div>
-        </header>
-
-    {% block content %}{% endblock %}
+        </div>
+      {% block content %} {% endblock %}
     </div>
-
+    {% block code %} {% endblock %}
     <!-- TODO: let's move this to a static file -->
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -112,6 +115,5 @@
         });
         });
     </script>
-
 </body>
 </html>

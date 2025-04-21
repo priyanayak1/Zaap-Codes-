@@ -1,9 +1,59 @@
 {% extends 'base.html' %}
 
-{% block title %} Saved Codes {% endblock %}
-{% block header %} Saved Codes {% endblock %}
-{% block slogan %}{% endblock %}
+{% block title %} ZaapCodes: Saved Codes {% endblock %}
 
-{% block content %}
+{% block head %}
+<style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card a {
+      color: #333;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.05rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .residential { background: rgb(98, 53, 24); }
+    .mechanical { background: #cc0707; }
+    .building { background: #376542; }
+    .energy { background: #124d96; }
+    .plumbing { background: #75274b; }
+    .fuel { background: #b68e0a; }
+
+  </style>
+{% endblock %}
+
+{% block header %} Saved Codes {% endblock %}
+{% block slogan %} Here are all your saved codes {% endblock %}
+
+{% block code %}
 {% include 'code_list_container.html' %}
 {% endblock %}

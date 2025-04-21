@@ -4,6 +4,33 @@
         <p>{{code.county_name}}</p>
         <p>{{code.code_type}}</p>
         <a href="/codes/{{code.code_type}}">Code Page</a>
+    {% endfor %}
+<div class="grid-container">
+    {% for code in codes %}
+    <div class="card">
+        <!-- Make sure that the href goes to the right code doc -->
+      <a href="/codes/{{code.code_type}}">{{code.county}}</a>
+      <!-- TODO when you implement this
+      <span class=
+      
+      "tag {% if code.code_type == 'Residential' %}
+            residential
+        {% elif code.code_type == 'Mechanical' %}
+            mechanical
+        {% elif code.code_type == 'Building' %}
+            building
+        {% elif code.code_type == 'Energy Conservation' %}
+            energy
+        {% elif code.code_type == 'Plumbing' %}
+            plumbing
+        {% elif code.code_type == 'Fuel Gas' %}
+            fuel
+        {% else %}
+          default
+        {% endif %}">
+        {{code.code_type}}
+
+        </span>
     </div>
     {% endfor %}
 </div>
